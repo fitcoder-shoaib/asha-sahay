@@ -1,0 +1,46 @@
+i want to design a mobile app, for asha workers. 
+
+
+feature 1
+the app should have a calender for tracking payments. like upcoming, pending and in process
+
+the calender page, should be split into two horizontally. upper half is the calender. lower half is the things in written.
+
+
+feature 2
+profile page
+
+should have data abt
+
+joining date
+service history
+training completed
+ncd screening conducted
+recognization and achievements
+
+digital service cert by our app 
+
+qr code -> like a id card, which we can scan and get/verify details
+
+feature 3
+
+quiz
+
+daily quiz
+5 questions 
+
+feature 4
+
+like when asha workers go to a home, they chk bp, and all.
+so all the data should be entered in an ordered manner.
+
+and also a button, for like checkup
+like does the patient require urgent checkup or not
+
+feature 5
+
+sos, click a red button in the top right for 3
+
+to activate sos
+
+

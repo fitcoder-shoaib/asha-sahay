@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 8 requires Node ^20.19 || >=22.12 — pin so the build doesn't drift.
+  NODE_VERSION = "22"
+
+# The app uses client-side routing, so the server has no file at /calendar,
+# /profile/qr, etc. Without this every deep link and every refresh away from "/"
+# would 404. Hand all unmatched paths to index.html and let React Router resolve them.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
