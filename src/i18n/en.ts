@@ -65,7 +65,7 @@ const en = {
   },
 
   sos: {
-    hold: 'Hold for 2s',
+    hold: 'Hold for 1s',
     activating: 'Keep holding',
     title: 'SOS ACTIVATED',
     subtitle: 'Alerting the police and your emergency contact',

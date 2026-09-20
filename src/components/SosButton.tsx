@@ -2,13 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useT } from '../i18n'
 
-const HOLD_MS = 2000
+const HOLD_MS = 1000
 const SECONDS = HOLD_MS / 1000
 const R = 21
 const CIRC = 2 * Math.PI * R
 
 /**
- * Press-and-hold for 2s to fire. Releasing early cancels and the ring snaps back.
+ * Press-and-hold for 1s to fire. Releasing early cancels and the ring snaps back.
  * Deliberately hard to trigger by accident — this lives in a pocket all day.
  */
 export default function SosButton() {
