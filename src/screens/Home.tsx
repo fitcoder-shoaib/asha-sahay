@@ -8,11 +8,15 @@ import { pick } from '../data/types'
 import { profile } from '../data/profile'
 import { payments, sumBy } from '../data/payments'
 import { patients, isUrgent } from '../data/patients'
-import { STREAK } from '../data/quiz'
+import { POINTS_BALANCE } from '../data/rewards'
 import { TODAY, fromIso, fullDate, rupees } from '../lib/date'
 
 export default function Home() {
   const { t, lang } = useT()
+
+  // Real clock, not the pinned demo date: the greeting should match the room.
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? t.home.morning : hour < 17 ? t.home.afternoon : t.home.evening
 
   const owed = sumBy(payments, 'pending') + sumBy(payments, 'process')
   const weekCutoff = new Date(TODAY)
@@ -25,7 +29,7 @@ export default function Home() {
   return (
     <div className="screen">
       <AppHeader
-        title={`${t.home.greeting}, ${pick(profile.name, lang)}`}
+        title={`${greeting}, ${pick(profile.name, lang)}`}
         subtitle={`${t.home.role} · ${profile.ashaId}`}
       />
 
@@ -35,7 +39,7 @@ export default function Home() {
         <div className="home__stats">
           <Stat icon={<Wallet size={18} />} label={t.home.pendingTitle} value={rupees(owed)} to="/calendar" />
           <Stat icon={<Stethoscope size={18} />} label={t.home.visitsTitle} value={String(visitsThisWeek)} to="/visits" />
-          <Stat icon={<BrainCircuit size={18} />} label={t.home.streakTitle} value={`${STREAK} ${t.home.days}`} to="/quiz" />
+          <Stat icon={<BrainCircuit size={18} />} label={t.home.streakTitle} value={POINTS_BALANCE.toLocaleString('en-IN')} to="/quiz" />
         </div>
 
         {urgent.length > 0 && (

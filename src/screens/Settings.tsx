@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { LANGS, useT } from '../i18n'
+import { useAuth } from '../auth'
 import { pick } from '../data/types'
 import { profile } from '../data/profile'
 
@@ -14,6 +15,7 @@ const APP_VERSION = '0.1.0'
 export default function Settings() {
   const { t, lang, setLang } = useT()
   const navigate = useNavigate()
+  const { signOut } = useAuth()
 
   // Toggles are local to the screen: nothing here is persisted in the prototype.
   const [paymentAlerts, setPaymentAlerts] = useState(true)
@@ -100,7 +102,8 @@ export default function Settings() {
                 style={{ flex: 1 }}
                 onClick={() => {
                   setConfirmLogout(false)
-                  navigate('/')
+                  signOut()
+                  navigate('/welcome', { replace: true })
                 }}
               >
                 <LogOut size={18} /> {t.settings.logout}

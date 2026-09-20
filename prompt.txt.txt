@@ -69,5 +69,14 @@ and for payments, they should see there salary status every month, like paid pen
 add a setting tab for language, notification, privacy and security, emergency contact, help and abt, logout.
 
 also add a 3line menu option on the top left to show the same option shown below.
+------------
 
+welcome page, login and register
+
+name, ph no, aadhar id, asha id, emergency contact, area address, passwd
+
+add a demo user
+
+--
+home page should have, good morning name.
 

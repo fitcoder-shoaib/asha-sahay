@@ -39,6 +39,24 @@ except `/` would 404 on refresh or on a shared deep link, because routing happen
    The build settings come from `netlify.toml`; just confirm and deploy.
 3. Every push to the default branch redeploys automatically.
 
+## Signing in
+
+The app opens on a **welcome** screen with the language picker, then **log in** or **create
+account**. One seeded demo account exists — the login screen shows the credentials and has a
+**Use demo account** button:
+
+```
+ASHA ID:  KL-PKD-04-2291
+Password: demo1234
+```
+
+Register collects name, phone, Aadhaar, ASHA ID, emergency contact, area and a password, with
+per-field validation. It is a mock form: nothing typed there is stored or transmitted, and the
+Aadhaar field exists only because real ASHA onboarding uses it.
+
+Log out lives at the bottom of Settings and returns you to the welcome screen. The session is
+remembered in `localStorage`, so a refresh keeps you signed in.
+
 ## The five features
 
 | # | Feature | What actually works |
