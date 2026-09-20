@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
-import { AlertTriangle, Check, Pencil } from 'lucide-react'
+import { AlertTriangle, CalendarClock, Check, Pencil } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { patients, symptomById } from '../data/patients'
 import { assess, levelLabel, type VitalKey } from '../lib/vitals'
-import { fromIso, fullDate } from '../lib/date'
+import { addDays, fromIso, fullDate } from '../lib/date'
 
 const VITAL_ORDER: VitalKey[] = ['systolic', 'diastolic', 'pulse', 'temp', 'spo2', 'sugar', 'weight']
 const UNITS: Record<VitalKey, string> = {
@@ -54,6 +54,10 @@ export default function VisitDetail() {
                   <span className="chip chip--urgentFlag">
                     <AlertTriangle size={12} /> {t.visits.urgentFlag}
                   </span>
+                ) : v.followUpDays ? (
+                  <span className="chip chip--follow">
+                    <CalendarClock size={12} /> {t.visits.actFollow}
+                  </span>
                 ) : (
                   <span className="chip chip--received">
                     <Check size={12} /> {t.visits.noReferral}
@@ -98,6 +102,13 @@ export default function VisitDetail() {
               )}
 
               <p className="vd__notes">{pick(v.notes, lang)}</p>
+
+              {v.followUpDays && (
+                <p className="vd__follow">
+                  <CalendarClock size={14} /> {t.visits.reviewOn}{' '}
+                  <strong>{fullDate(addDays(fromIso(v.date), v.followUpDays), lang)}</strong>
+                </p>
+              )}
 
               <Link
                 to="/visits/new"

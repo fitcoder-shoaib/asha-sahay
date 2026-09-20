@@ -55,4 +55,10 @@ export function yearsSince(isoDate: string) {
   return years
 }
 
+export function addDays(d: Date, days: number) {
+  const out = new Date(d)
+  out.setDate(d.getDate() + days)
+  return out
+}
+
 export const rupees = (n: number) => `₹${n.toLocaleString('en-IN')}`

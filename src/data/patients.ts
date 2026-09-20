@@ -7,6 +7,8 @@ export type Visit = {
   symptoms: string[]
   notes: L
   urgent: boolean
+  /** Set when the worker scheduled a later review instead of referring. */
+  followUpDays?: number
 }
 
 export type Patient = {
@@ -104,6 +106,7 @@ export const patients: Patient[] = [
           ml: 'നേരിയ പനി, ഭക്ഷണം കഴിക്കുന്നുണ്ട്. ഒആർഎസ് വിശദീകരിച്ചു, രണ്ട് ദിവസത്തിനകം വീണ്ടും പരിശോധന.',
         },
         urgent: false,
+        followUpDays: 3,
       },
     ],
   },
@@ -122,6 +125,7 @@ export const patients: Patient[] = [
           ml: 'പഞ്ചസാര കൂടിവരുന്നു. ഭക്ഷണ കൗൺസിലിംഗ് നൽകി, വീണ്ടും ഫാസ്റ്റിംഗ് ടെസ്റ്റ് നിർദ്ദേശിച്ചു.',
         },
         urgent: false,
+        followUpDays: 14,
       },
     ],
   },

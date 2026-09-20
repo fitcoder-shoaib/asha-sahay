@@ -97,37 +97,37 @@ export default function Calendar() {
             <Total label={t.calendar.inProcess} value={totals.process} tone="process" />
           </div>
 
-          {/* monthly salary status — the number a worker actually chases */}
-          <p className="cal__salaryLabel">{t.calendar.salaryStatus}</p>
-          <div className="cal__salary" ref={salaryRef}>
-            {salary.map((m) => {
-              const [y, mo] = m.month.split('-').map(Number)
-              const on = cursor.getFullYear() === y && cursor.getMonth() === mo - 1
-              return (
-                <button
-                  key={m.month}
-                  className={`cal__salaryItem cal__salaryItem--${m.status} ${on ? 'cal__salaryItem--on' : ''}`}
-                  onClick={() => {
-                    setCursor(new Date(y, mo - 1, 1))
-                    setSelected(null)
-                  }}
-                >
-                  <span className="cal__salaryMonth">
-                    {fromIso(`${m.month}-01`).toLocaleDateString(LOCALE[lang], { month: 'short' })}
-                  </span>
-                  <span className="cal__salaryState">{salaryLabel(m.status, t)}</span>
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="cal__nav">
+          {/* month navigation and salary status share one row: the calendar's
+              upper half is a fixed 50%, so every row here costs the grid. */}
+          <div className="cal__months">
             <button className="cal__navBtn" onClick={() => shiftMonth(-1)} aria-label="Previous month">
-              <ChevronLeft size={20} />
+              <ChevronLeft size={19} />
             </button>
-            <span className="cal__month">{monthLabel(cursor, lang)}</span>
+
+            <div className="cal__salary" ref={salaryRef}>
+              {salary.map((m) => {
+                const [y, mo] = m.month.split('-').map(Number)
+                const on = cursor.getFullYear() === y && cursor.getMonth() === mo - 1
+                return (
+                  <button
+                    key={m.month}
+                    className={`cal__salaryItem cal__salaryItem--${m.status} ${on ? 'cal__salaryItem--on' : ''}`}
+                    onClick={() => {
+                      setCursor(new Date(y, mo - 1, 1))
+                      setSelected(null)
+                    }}
+                  >
+                    <span className="cal__salaryMonth">
+                      {fromIso(`${m.month}-01`).toLocaleDateString(LOCALE[lang], { month: 'short' })}
+                    </span>
+                    <span className="cal__salaryState">{salaryLabel(m.status, t)}</span>
+                  </button>
+                )
+              })}
+            </div>
+
             <button className="cal__navBtn" onClick={() => shiftMonth(1)} aria-label="Next month">
-              <ChevronRight size={20} />
+              <ChevronRight size={19} />
             </button>
           </div>
 

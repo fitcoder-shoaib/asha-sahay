@@ -73,15 +73,45 @@ export const emptyVitals: VitalValues = {
 /** Danger-sign symptom ids that on their own warrant referral. */
 export const URGENT_SYMPTOMS = ['chestPain', 'breathless', 'bleeding', 'fits', 'unconscious', 'severeHeadache']
 
-/** Does anything here point to an urgent referral? Drives the pre-selected answer. */
+/** What the worker should do next. Most real visits land on 'followup'. */
+export type Action = 'urgent' | 'followup' | 'none'
+
+/**
+ * Triages the visit into one of three outcomes. Anything urgent wins; readings
+ * that are off-normal but not dangerous earn a scheduled review instead, which
+ * is what most home visits actually need.
+ */
 export function suggestUrgent(vitals: VitalValues, symptoms: string[]) {
   const hits: VitalKey[] = []
+  const watch: VitalKey[] = []
   for (const k of Object.keys(vitals) as VitalKey[]) {
-    if (assess(k, vitals[k])?.urgent) hits.push(k)
+    const r = assess(k, vitals[k])
+    if (!r) continue
+    if (r.urgent) hits.push(k)
+    else if (r.level !== 'normal') watch.push(k)
   }
   const danger = symptoms.filter((s) => URGENT_SYMPTOMS.includes(s))
-  return { urgent: hits.length > 0 || danger.length > 0, vitalHits: hits, dangerHits: danger }
+  const otherSymptoms = symptoms.filter((s) => !URGENT_SYMPTOMS.includes(s))
+
+  const action: Action =
+    hits.length > 0 || danger.length > 0
+      ? 'urgent'
+      : watch.length > 0 || otherSymptoms.length > 0
+        ? 'followup'
+        : 'none'
+
+  return {
+    action,
+    urgent: action === 'urgent',
+    vitalHits: hits,
+    dangerHits: danger,
+    watchHits: watch,
+  }
 }
+
+/** Follow-up intervals offered when the worker picks a later review. */
+export const FOLLOW_UP_DAYS = [3, 7, 14, 30] as const
+export type FollowUpDays = (typeof FOLLOW_UP_DAYS)[number]
 
 export function levelLabel(level: Level, t: Dict) {
   return {

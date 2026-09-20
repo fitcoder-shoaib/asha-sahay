@@ -1,7 +1,7 @@
 const en = {
   nav: {
     home: 'Home', calendar: 'Payments', visits: 'Visits', quiz: 'Quiz', profile: 'Profile',
-    settings: 'Settings', redeem: 'Redeem points', menu: 'Menu', more: 'More',
+    tasks: 'Tasks',     settings: 'Settings', redeem: 'Redeem points', menu: 'Menu', more: 'More',
   },
 
   auth: {
@@ -43,6 +43,18 @@ const en = {
     doneSub: 'Your supervisor will verify and activate it. You can explore the app meanwhile.',
     continueBtn: 'Continue',
     privacyNote: 'Prototype only — nothing you type here is saved or sent anywhere.',
+  },
+
+  tasks: {
+    title: "Today's tasks",
+    progress: 'Progress',
+    doneWord: 'done',
+    hint: 'Tap a task to see exactly what to do.',
+    whatToDo: 'What to do',
+    priority: 'Priority',
+    allDone: 'Everything done for today',
+    remaining: 'tasks left today',
+    openAll: 'View all tasks',
   },
 
   common: {
@@ -252,6 +264,18 @@ const en = {
     generalSymptoms: 'General symptoms',
     notes: 'Notes',
     notesPlaceholder: 'Anything else you observed…',
+    actionQuestion: 'What does this patient need next?',
+    actUrgent: 'Urgent checkup',
+    actUrgentSub: 'Refer to PHC today',
+    actFollow: 'Checkup later',
+    actFollowSub: 'Schedule a review visit',
+    actNone: 'Nothing for now',
+    actNoneSub: 'Routine visit, all normal',
+    reviewAfter: 'Review after',
+    days3: '3 days', week1: '1 week', weeks2: '2 weeks', month1: '1 month',
+    reviewOn: 'Review on',
+    followUpSet: 'Follow-up scheduled',
+    watchList: 'Worth watching',
     urgentQuestion: 'Does this patient need urgent checkup?',
     urgentAuto: 'Suggested from vitals — you can change it',
     referPhc: 'Refer to PHC',

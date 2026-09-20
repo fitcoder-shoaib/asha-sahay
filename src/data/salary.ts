@@ -15,12 +15,18 @@ export type SalaryMonth = {
 }
 
 export const salary: SalaryMonth[] = [
+  { month: '2025-11', amount: 7000, status: 'paid', creditedOn: '2025-12-04' },
+  { month: '2025-12', amount: 7000, status: 'paid', creditedOn: '2026-01-06' },
+  { month: '2026-01', amount: 7000, status: 'paid', creditedOn: '2026-02-05' },
+  { month: '2026-02', amount: 7000, status: 'delayed', lateBy: 9, creditedOn: '2026-03-14' },
+  { month: '2026-03', amount: 7000, status: 'paid', creditedOn: '2026-04-03' },
   { month: '2026-04', amount: 7000, status: 'paid', creditedOn: '2026-05-04' },
   { month: '2026-05', amount: 7000, status: 'delayed', lateBy: 18, creditedOn: '2026-06-24' },
   { month: '2026-06', amount: 7000, status: 'paid', creditedOn: '2026-07-03' },
   { month: '2026-07', amount: 7000, status: 'paid', creditedOn: '2026-08-05' },
   { month: '2026-08', amount: 7000, status: 'delayed', lateBy: 11, creditedOn: '2026-09-16' },
   { month: '2026-09', amount: 7000, status: 'pending' },
+  { month: '2026-10', amount: 7000, status: 'pending' },
 ]
 
 export const salaryFor = (year: number, month: number) =>

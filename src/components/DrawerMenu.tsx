@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import {
-  BrainCircuit, CalendarDays, Gift, Home, Settings, Stethoscope, User, X,
+  BrainCircuit, CalendarDays, Gift, Home, ListChecks, Settings, Stethoscope, User, X,
 } from 'lucide-react'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
@@ -31,6 +31,7 @@ export default function DrawerMenu({ open, onClose }: { open: boolean; onClose: 
   ]
 
   const secondary = [
+    { to: '/tasks', icon: ListChecks, label: t.nav.tasks },
     { to: '/redeem', icon: Gift, label: t.nav.redeem },
     { to: '/settings', icon: Settings, label: t.nav.settings },
   ]

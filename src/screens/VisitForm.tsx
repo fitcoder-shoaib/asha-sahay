@@ -1,14 +1,18 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { AlertTriangle, Check, ChevronLeft, ChevronRight, Hospital } from 'lucide-react'
+import {
+  AlertTriangle, CalendarClock, Check, ChevronLeft, ChevronRight, Hospital, ThumbsUp,
+} from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import VitalField from '../components/VitalField'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { SYMPTOMS, patients } from '../data/patients'
 import {
-  emptyVitals, suggestUrgent, type VitalKey, type VitalValues,
+  FOLLOW_UP_DAYS, emptyVitals, suggestUrgent,
+  type Action, type VitalKey, type VitalValues,
 } from '../lib/vitals'
+import { TODAY, fullDate } from '../lib/date'
 
 const STEPS = [0, 1, 2, 3]
 const VITAL_KEYS: VitalKey[] = ['systolic', 'diastolic', 'pulse', 'temp', 'spo2', 'weight', 'sugar']
@@ -42,12 +46,19 @@ export default function VisitForm() {
   const [symptoms, setSymptoms] = useState<string[]>(editing ? editing.visit.symptoms : [])
   const [noSymptoms, setNoSymptoms] = useState(editing ? editing.visit.symptoms.length === 0 : false)
   const [notes, setNotes] = useState(editing ? pick(editing.visit.notes, lang) : '')
-  /** null = follow the suggestion; true/false = the worker has overridden it. */
-  const [override, setOverride] = useState<boolean | null>(editing ? editing.visit.urgent : null)
+  /** null = follow the suggestion; otherwise the worker has chosen explicitly. */
+  const [override, setOverride] = useState<Action | null>(
+    editing ? (editing.visit.urgent ? 'urgent' : editing.visit.followUpDays ? 'followup' : 'none') : null,
+  )
+  const [followDays, setFollowDays] = useState<number>(editing?.visit.followUpDays ?? 7)
   const [saved, setSaved] = useState(false)
 
   const suggestion = useMemo(() => suggestUrgent(vitals, symptoms), [vitals, symptoms])
-  const urgent = override ?? suggestion.urgent
+  const action: Action = override ?? suggestion.action
+  const urgent = action === 'urgent'
+
+  const reviewDate = new Date(TODAY)
+  reviewDate.setDate(TODAY.getDate() + followDays)
 
   const setVital = (k: VitalKey) => (v: string) => setVitals((s) => ({ ...s, [k]: v }))
 
@@ -98,9 +109,14 @@ export default function VisitForm() {
             </h2>
             <p className="done__sub">{name}</p>
             <p className="faint" style={{ fontSize: 12.5, margin: 0 }}>{address}</p>
-            {urgent && (
+            {action === 'urgent' && (
               <span className="done__urgent">
                 <AlertTriangle size={14} /> {t.visits.referred}
+              </span>
+            )}
+            {action === 'followup' && (
+              <span className="done__follow">
+                <CalendarClock size={14} /> {t.visits.followUpSet} · {fullDate(reviewDate, lang)}
               </span>
             )}
           </div>
@@ -247,27 +263,62 @@ export default function VisitForm() {
               />
             </label>
 
-            <div className={`ref ${urgent ? 'ref--urgent' : ''}`}>
-              <p className="ref__q">{t.visits.urgentQuestion}</p>
+            <div className={`ref ref--${action}`}>
+              <p className="ref__q">{t.visits.actionQuestion}</p>
 
-              <div className="ref__btns">
-                <button
-                  className={`ref__btn ${urgent ? 'ref__btn--yes' : ''}`}
-                  onClick={() => setOverride(true)}
-                >
-                  {t.common.yes}
-                </button>
-                <button
-                  className={`ref__btn ${!urgent ? 'ref__btn--no' : ''}`}
-                  onClick={() => setOverride(false)}
-                >
-                  {t.common.no}
-                </button>
+              <div className="acts">
+                <ActionCard
+                  on={action === 'urgent'}
+                  tone="urgent"
+                  icon={<AlertTriangle size={19} />}
+                  title={t.visits.actUrgent}
+                  sub={t.visits.actUrgentSub}
+                  onClick={() => setOverride('urgent')}
+                />
+                <ActionCard
+                  on={action === 'followup'}
+                  tone="followup"
+                  icon={<CalendarClock size={19} />}
+                  title={t.visits.actFollow}
+                  sub={t.visits.actFollowSub}
+                  onClick={() => setOverride('followup')}
+                />
+                <ActionCard
+                  on={action === 'none'}
+                  tone="none"
+                  icon={<ThumbsUp size={19} />}
+                  title={t.visits.actNone}
+                  sub={t.visits.actNoneSub}
+                  onClick={() => setOverride('none')}
+                />
               </div>
+
+              {action === 'followup' && (
+                <div className="fu fade-in">
+                  <p className="fu__label">{t.visits.reviewAfter}</p>
+                  <div className="fu__opts">
+                    {FOLLOW_UP_DAYS.map((d) => (
+                      <button
+                        key={d}
+                        className={`fu__opt ${followDays === d ? 'fu__opt--on' : ''}`}
+                        onClick={() => setFollowDays(d)}
+                      >
+                        {{ 3: t.visits.days3, 7: t.visits.week1, 14: t.visits.weeks2, 30: t.visits.month1 }[d]}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="fu__date">
+                    <CalendarClock size={14} /> {t.visits.reviewOn}{' '}
+                    <strong>{fullDate(reviewDate, lang)}</strong>
+                  </p>
+                </div>
+              )}
 
               <p className="ref__auto">{t.visits.urgentAuto}</p>
 
-              {(suggestion.vitalHits.length > 0 || suggestion.dangerHits.length > 0) && (
+              {(suggestion.vitalHits.length > 0 ||
+                suggestion.dangerHits.length > 0 ||
+                suggestion.watchHits.length > 0) && (
                 <ul className="ref__reasons">
                   {suggestion.vitalHits.map((k) => (
                     <li key={k}>
@@ -275,13 +326,18 @@ export default function VisitForm() {
                     </li>
                   ))}
                   {suggestion.dangerHits.map((id) => {
-                    const s = SYMPTOMS.find((x) => x.id === id)
-                    return s ? (
+                    const sy = SYMPTOMS.find((x) => x.id === id)
+                    return sy ? (
                       <li key={id}>
-                        <AlertTriangle size={12} /> {pick(s.label, lang)}
+                        <AlertTriangle size={12} /> {pick(sy.label, lang)}
                       </li>
                     ) : null
                   })}
+                  {suggestion.watchHits.map((k) => (
+                    <li key={k} className="ref__reasons--watch">
+                      <CalendarClock size={12} /> {vitalName(k, t)}: {vitals[k]}
+                    </li>
+                  ))}
                 </ul>
               )}
 
@@ -327,6 +383,30 @@ export default function VisitForm() {
         </div>
       </div>
     </div>
+  )
+}
+
+function ActionCard({
+  on, tone, icon, title, sub, onClick,
+}: {
+  on: boolean
+  tone: string
+  icon: React.ReactNode
+  title: string
+  sub: string
+  onClick: () => void
+}) {
+  return (
+    <button className={`act act--${tone} ${on ? 'act--on' : ''}`} onClick={onClick}>
+      <span className="act__icon">{icon}</span>
+      <span className="col" style={{ flex: 1, minWidth: 0 }}>
+        <span className="act__title">{title}</span>
+        <span className="act__sub">{sub}</span>
+      </span>
+      <span className={`act__tick ${on ? 'act__tick--on' : ''}`}>
+        {on && <Check size={13} strokeWidth={3} />}
+      </span>
+    </button>
   )
 }
 

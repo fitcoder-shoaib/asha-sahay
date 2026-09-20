@@ -3,7 +3,7 @@ import type { Dict } from './en'
 const hi: Dict = {
   nav: {
     home: 'होम', calendar: 'भुगतान', visits: 'भ्रमण', quiz: 'क्विज़', profile: 'प्रोफ़ाइल',
-    settings: 'सेटिंग', redeem: 'अंक भुनाएँ', menu: 'मेन्यू', more: 'और',
+    tasks: 'कार्य',     settings: 'सेटिंग', redeem: 'अंक भुनाएँ', menu: 'मेन्यू', more: 'और',
   },
 
   auth: {
@@ -45,6 +45,18 @@ const hi: Dict = {
     doneSub: 'आपकी पर्यवेक्षक जाँच कर इसे सक्रिय करेंगी। तब तक आप ऐप देख सकती हैं।',
     continueBtn: 'आगे बढ़ें',
     privacyNote: 'केवल प्रोटोटाइप — यहाँ लिखा कुछ भी सहेजा या भेजा नहीं जाता।',
+  },
+
+  tasks: {
+    title: 'आज के कार्य',
+    progress: 'प्रगति',
+    doneWord: 'पूर्ण',
+    hint: 'क्या करना है, यह देखने के लिए कार्य पर टैप करें।',
+    whatToDo: 'क्या करना है',
+    priority: 'प्राथमिकता',
+    allDone: 'आज के सभी कार्य पूर्ण',
+    remaining: 'कार्य आज शेष',
+    openAll: 'सभी कार्य देखें',
   },
 
   common: {
@@ -254,6 +266,18 @@ const hi: Dict = {
     generalSymptoms: 'सामान्य लक्षण',
     notes: 'टिप्पणी',
     notesPlaceholder: 'अन्य कोई अवलोकन…',
+    actionQuestion: 'इस रोगी को आगे क्या चाहिए?',
+    actUrgent: 'तत्काल जाँच',
+    actUrgentSub: 'आज ही पीएचसी रेफर करें',
+    actFollow: 'बाद में जाँच',
+    actFollowSub: 'पुनः भ्रमण निर्धारित करें',
+    actNone: 'अभी कुछ नहीं',
+    actNoneSub: 'नियमित भ्रमण, सब सामान्य',
+    reviewAfter: 'पुनः जाँच',
+    days3: '3 दिन बाद', week1: '1 सप्ताह बाद', weeks2: '2 सप्ताह बाद', month1: '1 माह बाद',
+    reviewOn: 'पुनः जाँच दिनांक',
+    followUpSet: 'पुनः जाँच निर्धारित',
+    watchList: 'ध्यान देने योग्य',
     urgentQuestion: 'क्या रोगी को तत्काल जाँच की आवश्यकता है?',
     urgentAuto: 'जाँच के आधार पर सुझाव — आप बदल सकती हैं',
     referPhc: 'पीएचसी रेफर करें',

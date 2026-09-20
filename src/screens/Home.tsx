@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import {
-  AlertTriangle, BrainCircuit, ChevronRight, IdCard, Stethoscope, Wallet,
+  AlertTriangle, BrainCircuit, Check, ChevronRight, Clock, IdCard, ListChecks,
+  Stethoscope, Wallet,
 } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
@@ -9,6 +10,7 @@ import { profile } from '../data/profile'
 import { payments, sumBy } from '../data/payments'
 import { patients, isUrgent } from '../data/patients'
 import { POINTS_BALANCE } from '../data/rewards'
+import { tasks } from '../data/tasks'
 import { TODAY, fromIso, fullDate, rupees } from '../lib/date'
 
 export default function Home() {
@@ -25,6 +27,16 @@ export default function Home() {
     (p) => p.visits[0] && fromIso(p.visits[0].date) >= weekCutoff,
   ).length
   const urgent = patients.filter(isUrgent)
+
+  const total = tasks.length
+  const doneCount = tasks.filter((x) => x.done).length
+  const taskStats = {
+    total,
+    done: doneCount,
+    left: total - doneCount,
+    pct: Math.round((doneCount / total) * 100),
+  }
+  const nextTasks = tasks.filter((x) => !x.done).slice(0, 2)
 
   return (
     <div className="screen">
@@ -54,6 +66,41 @@ export default function Home() {
             <ChevronRight size={20} />
           </Link>
         )}
+
+        {/* today's tasks */}
+        <h2 className="section-title" style={{ marginTop: 18 }}>{t.tasks.title}</h2>
+        <Link to="/tasks" className="tkCard">
+          <div className="tkCard__top">
+            <span className="tkCard__icon"><ListChecks size={19} /></span>
+            <span className="col" style={{ flex: 1, minWidth: 0 }}>
+              <span className="tkCard__count">
+                {taskStats.left} {t.tasks.remaining}
+              </span>
+              <span className="tkCard__sub">
+                {taskStats.done} / {taskStats.total} {t.tasks.doneWord}
+              </span>
+            </span>
+            <ChevronRight size={18} className="faint" />
+          </div>
+
+          <div className="tkCard__bar">
+            <span className="tkCard__barFill" style={{ width: `${taskStats.pct}%` }} />
+          </div>
+
+          <ul className="tkCard__next">
+            {nextTasks.map((x) => (
+              <li key={x.id}>
+                <span className="tkCard__time"><Clock size={11} /> {x.time}</span>
+                <span className="tkCard__title">{pick(x.title, lang)}</span>
+              </li>
+            ))}
+            {nextTasks.length === 0 && (
+              <li className="tkCard__clear">
+                <Check size={13} strokeWidth={3} /> {t.tasks.allDone}
+              </li>
+            )}
+          </ul>
+        </Link>
 
         <h2 className="section-title" style={{ marginTop: 18 }}>{t.home.quickActions}</h2>
         <div className="home__actions">

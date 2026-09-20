@@ -19,6 +19,7 @@ import ScanQr from './screens/ScanQr'
 import Sos from './screens/Sos'
 import Settings from './screens/Settings'
 import Redeem from './screens/Redeem'
+import Tasks from './screens/Tasks'
 import Welcome from './screens/Welcome'
 import Login from './screens/Login'
 import Register from './screens/Register'
@@ -72,6 +73,7 @@ function Shell() {
             <Route path="/sos" element={<Sos />} />
             <Route path="/settings" element={<Settings />} />
       <Route path="/redeem" element={<Redeem />} />
+      <Route path="/tasks" element={<Tasks />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
