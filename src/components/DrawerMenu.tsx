@@ -6,6 +6,7 @@ import {
 import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { profile } from '../data/profile'
+import Logo from './Logo'
 
 /**
  * Mirrors the bottom tab bar, plus the two destinations that have no room
@@ -42,10 +43,10 @@ export default function DrawerMenu({ open, onClose }: { open: boolean; onClose: 
 
       <aside className="drawer__panel" role="dialog" aria-label={t.nav.menu}>
         <header className="drawer__head">
-          <div className="drawer__avatar">{profile.initials}</div>
+          <Logo size={40} className="drawer__logo" />
           <div className="col" style={{ flex: 1, minWidth: 0 }}>
-            <span className="drawer__name">{pick(profile.name, lang)}</span>
-            <span className="drawer__id">{profile.ashaId}</span>
+            <span className="drawer__name">ASHA Sahay</span>
+            <span className="drawer__id">{pick(profile.name, lang)} · {profile.ashaId}</span>
           </div>
           <button className="drawer__close" onClick={onClose} aria-label={t.common.close}>
             <X size={20} />

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AlertTriangle, ChevronLeft, Eye, EyeOff, HeartPulse, LogIn } from 'lucide-react'
+import { AlertTriangle, ChevronLeft, Eye, EyeOff, LogIn } from 'lucide-react'
 import { DEMO, useAuth } from '../auth'
 import { useT } from '../i18n'
+import Logo from '../components/Logo'
 
 export default function Login() {
   const { t } = useT()
@@ -25,7 +26,7 @@ export default function Login() {
         <button className="auth__back" onClick={() => navigate('/welcome')} aria-label={t.common.back}>
           <ChevronLeft size={24} />
         </button>
-        <span className="auth__mark"><HeartPulse size={20} /></span>
+        <Logo size={44} className="auth__logo" />
         <h1 className="auth__title">{t.auth.loginTitle}</h1>
         <p className="auth__sub">{t.auth.loginSub}</p>
       </header>

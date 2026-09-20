@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
-  AlertTriangle, Check, ChevronLeft, Eye, EyeOff, HeartPulse, Lock, ShieldCheck, UserPlus,
+  AlertTriangle, Check, ChevronLeft, Eye, EyeOff, Lock, ShieldCheck, UserPlus,
 } from 'lucide-react'
 import { useAuth } from '../auth'
 import { useT } from '../i18n'
+import Logo from '../components/Logo'
 
 const digits = (v: string) => v.replace(/\D/g, '')
 
@@ -74,7 +75,7 @@ export default function Register() {
         <button className="auth__back" onClick={() => navigate('/welcome')} aria-label={t.common.back}>
           <ChevronLeft size={24} />
         </button>
-        <span className="auth__mark"><HeartPulse size={20} /></span>
+        <Logo size={44} className="auth__logo" />
         <h1 className="auth__title">{t.auth.regTitle}</h1>
         <p className="auth__sub">{t.auth.regSub}</p>
       </header>

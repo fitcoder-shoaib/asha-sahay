@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { BrainCircuit, HeartPulse, ShieldAlert, Wallet } from 'lucide-react'
+import Logo from '../components/Logo'
 import { LANGS, useT } from '../i18n'
 
 export default function Welcome() {
@@ -18,11 +19,7 @@ export default function Welcome() {
       <div className="wel__glowB" />
 
       <div className="wel__body">
-        <div className="wel__mark">
-          <span className="wel__markInner">
-            <HeartPulse size={34} strokeWidth={2.2} />
-          </span>
-        </div>
+        <Logo size={80} className="wel__logo" />
 
         <h1 className="wel__name">ASHA Sahay</h1>
         <p className="wel__tagline">{t.auth.tagline}</p>

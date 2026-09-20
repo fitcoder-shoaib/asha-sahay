@@ -5,7 +5,7 @@ const en = {
   },
 
   auth: {
-    tagline: 'The everyday companion for ASHA workers',
+    tagline: 'Your Digital Companion for Community Health',
     blurb: 'Track your payments, record home visits, learn daily and stay safe — all in one place, all offline.',
     chooseLanguage: 'Choose your language',
     getStarted: 'Get started',

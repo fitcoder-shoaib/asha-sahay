@@ -1,5 +1,5 @@
 import { QRCodeSVG } from 'qrcode.react'
-import { IdCard } from 'lucide-react'
+import Logo from '../components/Logo'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
@@ -15,7 +15,7 @@ export default function QrId() {
       <div className="scroll pad qr">
         <div className="qr__card">
           <div className="qr__head">
-            <IdCard size={18} />
+            <Logo size={20} variant="plain" />
             <span>ASHA SAHAY</span>
           </div>
 

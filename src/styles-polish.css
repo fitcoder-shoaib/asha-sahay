@@ -224,27 +224,34 @@
 
 .wel__body { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; }
 
-.wel__mark {
-  width: 76px; height: 76px; margin-bottom: 20px;
-  border-radius: 24px;
-  background: rgba(255,255,255,.14);
-  display: grid; place-items: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+.wel__logo {
+  display: block;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  box-shadow: 0 12px 34px rgba(0,0,0,.28);
 }
-.wel__markInner {
-  width: 58px; height: 58px;
-  border-radius: 18px;
-  background: #fff; color: var(--primary);
-  display: grid; place-items: center;
+
+.auth__logo {
+  display: block;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.2);
 }
+
+.drawer__logo { flex: none; border-radius: 11px; box-shadow: 0 3px 10px rgba(0,0,0,.2); }
 
 .wel__name {
   margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -.02em;
   overflow-wrap: anywhere;
 }
 .wel__tagline {
-  margin: 6px 0 0; font-size: 15px; font-weight: 600;
-  color: #7FE3DC; overflow-wrap: anywhere; line-height: 1.35;
+  margin: 8px 0 0;
+  font-size: 15px; font-weight: 600;
+  color: #7FE3DC;
+  /* no max-width: Malayalam compounds are long, and constraining the line
+     forces an ugly mid-cluster break rather than a break at a space */
+  line-height: 1.4;
+  overflow-wrap: break-word;
 }
 .wel__blurb {
   margin: 14px 0 0; font-size: 13.5px; line-height: 1.6;
@@ -316,12 +323,6 @@
   border-radius: 999px; color: #fff;
 }
 .auth__back:active { background: rgba(255,255,255,.2); }
-.auth__mark {
-  width: 42px; height: 42px; margin-bottom: 12px;
-  border-radius: 14px;
-  background: rgba(255,255,255,.16);
-  display: grid; place-items: center;
-}
 .auth__title { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.01em; overflow-wrap: anywhere; }
 .auth__sub {
   margin: 5px 0 0; font-size: 13px; line-height: 1.45;
