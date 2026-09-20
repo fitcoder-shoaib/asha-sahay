@@ -14,7 +14,7 @@ export type Patient = {
   name: L
   age: number
   gender: 'male' | 'female' | 'other'
-  household: string
+  address: L
   visits: Visit[]
 }
 
@@ -27,7 +27,7 @@ export const patients: Patient[] = [
   {
     id: 'p1',
     name: { en: 'Sarasamma K', hi: 'सरसम्मा के', ml: 'സരസമ്മ കെ' },
-    age: 64, gender: 'female', household: 'HH-0412',
+    age: 64, gender: 'female', address: { en: 'Thekkeveedu, Ward 7', hi: 'थेक्केवीडु, वार्ड 7', ml: 'തെക്കേവീട്, വാർഡ് 7' },
     visits: [
       {
         date: '2026-09-18',
@@ -56,7 +56,7 @@ export const patients: Patient[] = [
   {
     id: 'p2',
     name: { en: 'Nabeesa Beevi', hi: 'नबीसा बीवी', ml: 'നബീസ ബീവി' },
-    age: 29, gender: 'female', household: 'HH-0377',
+    age: 29, gender: 'female', address: { en: 'Puthanpurayil, Ward 8', hi: 'पुथनपुरयिल, वार्ड 8', ml: 'പുത്തൻപുരയിൽ, വാർഡ് 8' },
     visits: [
       {
         date: '2026-09-17',
@@ -74,7 +74,7 @@ export const patients: Patient[] = [
   {
     id: 'p3',
     name: { en: 'Raman Nair', hi: 'रमन नायर', ml: 'രാമൻ നായർ' },
-    age: 71, gender: 'male', household: 'HH-0298',
+    age: 71, gender: 'male', address: { en: 'Nair Madom, Ward 7', hi: 'नायर मडोम, वार्ड 7', ml: 'നായർ മഠം, വാർഡ് 7' },
     visits: [
       {
         date: '2026-09-15',
@@ -92,7 +92,7 @@ export const patients: Patient[] = [
   {
     id: 'p4',
     name: { en: 'Ayisha Rahman', hi: 'आयशा रहमान', ml: 'ആയിഷ റഹ്മാൻ' },
-    age: 4, gender: 'female', household: 'HH-0451',
+    age: 4, gender: 'female', address: { en: 'Rahman Manzil, Ward 8', hi: 'रहमान मंज़िल, वार्ड 8', ml: 'റഹ്മാൻ മൻസിൽ, വാർഡ് 8' },
     visits: [
       {
         date: '2026-09-14',
@@ -110,7 +110,7 @@ export const patients: Patient[] = [
   {
     id: 'p5',
     name: { en: 'Velayudhan P', hi: 'वेलायुधन पी', ml: 'വേലായുധൻ പി' },
-    age: 58, gender: 'male', household: 'HH-0205',
+    age: 58, gender: 'male', address: { en: 'Kizhakkethil, Ward 6', hi: 'किष़क्केथिल, वार्ड 6', ml: 'കിഴക്കേതിൽ, വാർഡ് 6' },
     visits: [
       {
         date: '2026-09-11',
@@ -128,7 +128,7 @@ export const patients: Patient[] = [
   {
     id: 'p6',
     name: { en: 'Kamala Devi', hi: 'कमला देवी', ml: 'കമല ദേവി' },
-    age: 47, gender: 'female', household: 'HH-0330',
+    age: 47, gender: 'female', address: { en: 'Chandran Nivas, Ward 7', hi: 'चंद्रन निवास, वार्ड 7', ml: 'ചന്ദ്രൻ നിവാസ്, വാർഡ് 7' },
     visits: [
       {
         date: '2026-09-09',

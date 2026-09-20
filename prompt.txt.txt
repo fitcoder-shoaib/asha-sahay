@@ -42,5 +42,32 @@ feature 5
 sos, click a red button in the top right for 3
 
 to activate sos
+--------
+
+
+in the sos change the ambulance to police 
+no calling supervisor
+remove sub-centre
+
+sos trigger to 2 seconds
+
+----
+
+where are pts shown for quizzes
+and also make a tab where they can redeem cash for points
+
+service history should be in descending order
+
+add a minimize arrow option for training completed
+
+add edit option in visits
+
+for visits change the household id to address and make sure filling all fields is compulsory before clicking next.
+
+and for payments, they should see there salary status every month, like paid pending and delayed in green orange and red color coding.
+
+add a setting tab for language, notification, privacy and security, emergency contact, help and abt, logout.
+
+also add a 3line menu option on the top left to show the same option shown below.
 
 

@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
-import { BrainCircuit, Flame, ListChecks, Play } from 'lucide-react'
+import { BrainCircuit, ChevronRight, Coins, Flame, Gift, ListChecks, Play } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { STREAK, todaysQuestions } from '../data/quiz'
-import { TODAY, fullDate } from '../lib/date'
+import { POINTS_BALANCE, POINTS_LIFETIME, POINTS_PER_RUPEE } from '../data/rewards'
+import { TODAY, fullDate, rupees } from '../lib/date'
 
 export default function Quiz() {
   const { t, lang } = useT()
@@ -17,7 +18,32 @@ export default function Quiz() {
       <AppHeader title={t.quiz.title} subtitle={fullDate(TODAY, lang)} />
 
       <div className="scroll pad">
-        <section className="quizCard">
+        {/* points balance — the answer to "where are my points?" */}
+        <section className="pts">
+          <div className="pts__row">
+            <span className="pts__icon"><Coins size={22} /></span>
+            <div className="col" style={{ flex: 1, minWidth: 0 }}>
+              <span className="pts__label">{t.quiz.pointsBalance}</span>
+              <span className="pts__value">
+                {POINTS_BALANCE.toLocaleString('en-IN')} <i>{t.quiz.pts}</i>
+              </span>
+            </div>
+            <div className="col pts__worth">
+              <span className="pts__worthValue">
+                {rupees(Math.floor(POINTS_BALANCE / POINTS_PER_RUPEE))}
+              </span>
+              <span className="pts__worthLabel">{t.quiz.earnedSoFar}</span>
+            </div>
+          </div>
+
+          <Link to="/redeem" className="pts__cta">
+            <Gift size={18} />
+            <span style={{ flex: 1 }}>{t.quiz.redeemCta}</span>
+            <ChevronRight size={18} />
+          </Link>
+        </section>
+
+        <section className="quizCard" style={{ marginTop: 14 }}>
           <span className="quizCard__icon"><BrainCircuit size={30} /></span>
           <h2 className="quizCard__title">{t.quiz.todaysQuiz}</h2>
           <p className="quizCard__sub">{t.quiz.fiveQuestions}</p>
@@ -42,6 +68,10 @@ export default function Quiz() {
             <span key={tp} className="quizTopic">{tp}</span>
           ))}
         </div>
+
+        <p className="pts__lifetime">
+          {t.quiz.myPoints}: {POINTS_LIFETIME.toLocaleString('en-IN')} {t.quiz.pts}
+        </p>
       </div>
     </div>
   )

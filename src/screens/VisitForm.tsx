@@ -1,50 +1,103 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AlertTriangle, Check, ChevronLeft, ChevronRight, Hospital } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import VitalField from '../components/VitalField'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
-import { SYMPTOMS } from '../data/patients'
-import { emptyVitals, suggestUrgent, type VitalKey, type VitalValues } from '../lib/vitals'
+import { SYMPTOMS, patients } from '../data/patients'
+import {
+  emptyVitals, suggestUrgent, type VitalKey, type VitalValues,
+} from '../lib/vitals'
 
 const STEPS = [0, 1, 2, 3]
+const VITAL_KEYS: VitalKey[] = ['systolic', 'diastolic', 'pulse', 'temp', 'spo2', 'weight', 'sugar']
+
+/** Set by VisitDetail when the worker taps Edit on an existing record. */
+type EditState = { patientId?: string; visitIndex?: number } | null
 
 export default function VisitForm() {
   const { t, lang } = useT()
   const navigate = useNavigate()
+  const { state } = useLocation() as { state: EditState }
+
+  // When editing, seed every field from the stored visit.
+  const editing = useMemo(() => {
+    if (!state?.patientId) return null
+    const p = patients.find((x) => x.id === state.patientId)
+    const v = p?.visits[state.visitIndex ?? 0]
+    return p && v ? { patient: p, visit: v } : null
+  }, [state])
 
   const [step, setStep] = useState(0)
-  const [name, setName] = useState('')
-  const [age, setAge] = useState('')
-  const [gender, setGender] = useState<'male' | 'female' | 'other'>('female')
-  const [household, setHousehold] = useState('')
-  const [vitals, setVitals] = useState<VitalValues>(emptyVitals)
-  const [symptoms, setSymptoms] = useState<string[]>([])
-  const [notes, setNotes] = useState('')
+  const [touched, setTouched] = useState(false)
+
+  const [name, setName] = useState(editing ? pick(editing.patient.name, lang) : '')
+  const [age, setAge] = useState(editing ? String(editing.patient.age) : '')
+  const [gender, setGender] = useState<'male' | 'female' | 'other'>(
+    editing ? editing.patient.gender : 'female',
+  )
+  const [address, setAddress] = useState(editing ? pick(editing.patient.address, lang) : '')
+  const [vitals, setVitals] = useState<VitalValues>(editing ? editing.visit.vitals : emptyVitals)
+  const [symptoms, setSymptoms] = useState<string[]>(editing ? editing.visit.symptoms : [])
+  const [noSymptoms, setNoSymptoms] = useState(editing ? editing.visit.symptoms.length === 0 : false)
+  const [notes, setNotes] = useState(editing ? pick(editing.visit.notes, lang) : '')
   /** null = follow the suggestion; true/false = the worker has overridden it. */
-  const [override, setOverride] = useState<boolean | null>(null)
+  const [override, setOverride] = useState<boolean | null>(editing ? editing.visit.urgent : null)
   const [saved, setSaved] = useState(false)
 
   const suggestion = useMemo(() => suggestUrgent(vitals, symptoms), [vitals, symptoms])
   const urgent = override ?? suggestion.urgent
 
   const setVital = (k: VitalKey) => (v: string) => setVitals((s) => ({ ...s, [k]: v }))
-  const toggleSymptom = (id: string) =>
+
+  const toggleSymptom = (id: string) => {
+    setNoSymptoms(false)
     setSymptoms((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]))
+  }
 
   const stepNames = [t.visits.step1, t.visits.step2, t.visits.step3, t.visits.step4]
-  const canNext = step !== 0 || name.trim().length > 0
+
+  // Every field on the current step must be filled before Next unlocks.
+  const missing = {
+    name: name.trim() === '',
+    age: age.trim() === '',
+    address: address.trim() === '',
+    vitals: VITAL_KEYS.filter((k) => vitals[k].trim() === ''),
+    symptoms: symptoms.length === 0 && !noSymptoms,
+    notes: notes.trim() === '',
+  }
+  const stepValid = [
+    !missing.name && !missing.age && !missing.address,
+    missing.vitals.length === 0,
+    !missing.symptoms,
+    !missing.notes,
+  ][step]
+
+  const goNext = () => {
+    if (!stepValid) {
+      setTouched(true)
+      return
+    }
+    setTouched(false)
+    if (step < 3) setStep(step + 1)
+    else setSaved(true)
+  }
+
+  const err = (bad: boolean) => (touched && bad ? ' fld--err' : '')
 
   if (saved) {
     return (
       <div className="screen">
-        <AppHeader title={t.visits.newVisit} back />
+        <AppHeader title={editing ? t.visits.editVisit : t.visits.newVisit} back />
         <div className="scroll pad">
           <div className="done fade-in">
             <span className="done__tick"><Check size={32} strokeWidth={3} /></span>
-            <h2 className="done__title">{t.visits.saveVisit}</h2>
-            <p className="done__sub">{name || t.visits.step1}</p>
+            <h2 className="done__title">
+              {editing ? t.visits.updateVisit : t.visits.saveVisit}
+            </h2>
+            <p className="done__sub">{name}</p>
+            <p className="faint" style={{ fontSize: 12.5, margin: 0 }}>{address}</p>
             {urgent && (
               <span className="done__urgent">
                 <AlertTriangle size={14} /> {t.visits.referred}
@@ -62,7 +115,7 @@ export default function VisitForm() {
   return (
     <div className="screen">
       <AppHeader
-        title={t.visits.newVisit}
+        title={editing ? t.visits.editVisit : t.visits.newVisit}
         subtitle={`${t.visits.stepOf} ${step + 1} / 4 · ${stepNames[step]}`}
         back
       />
@@ -80,31 +133,36 @@ export default function VisitForm() {
         {/* ---------- 1. patient ---------- */}
         {step === 0 && (
           <div className="fade-in form">
-            <label className="fld">
-              <span className="fld__label">{t.visits.name}</span>
+            <label className={`fld${err(missing.name)}`}>
+              <span className="fld__label">
+                {t.visits.name} <Req show={touched && missing.name} label={t.common.required} />
+              </span>
               <input className="fld__input" value={name} onChange={(e) => setName(e.target.value)} />
             </label>
 
-            <div className="form__row">
-              <label className="fld">
-                <span className="fld__label">{t.visits.age}</span>
-                <input
-                  className="fld__input"
-                  inputMode="numeric"
-                  value={age}
-                  onChange={(e) => setAge(e.target.value.replace(/\D/g, ''))}
-                />
-              </label>
-              <label className="fld">
-                <span className="fld__label">{t.visits.household}</span>
-                <input
-                  className="fld__input"
-                  value={household}
-                  onChange={(e) => setHousehold(e.target.value)}
-                  placeholder="HH-0000"
-                />
-              </label>
-            </div>
+            <label className={`fld${err(missing.age)}`}>
+              <span className="fld__label">
+                {t.visits.age} <Req show={touched && missing.age} label={t.common.required} />
+              </span>
+              <input
+                className="fld__input"
+                inputMode="numeric"
+                value={age}
+                onChange={(e) => setAge(e.target.value.replace(/\D/g, ''))}
+              />
+            </label>
+
+            <label className={`fld${err(missing.address)}`}>
+              <span className="fld__label">
+                {t.visits.address} <Req show={touched && missing.address} label={t.common.required} />
+              </span>
+              <input
+                className="fld__input"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder={t.visits.addressPlaceholder}
+              />
+            </label>
 
             <span className="fld__label">{t.visits.gender}</span>
             <div className="seg">
@@ -126,18 +184,18 @@ export default function VisitForm() {
           <div className="fade-in form">
             <span className="fld__label">{t.visits.bp}</span>
             <div className="form__row">
-              <VitalField vkey="systolic" label={t.visits.systolic} unit="mmHg" value={vitals.systolic} onChange={setVital('systolic')} placeholder="120" />
-              <VitalField vkey="diastolic" label={t.visits.diastolic} unit="mmHg" value={vitals.diastolic} onChange={setVital('diastolic')} placeholder="80" />
+              <VitalField vkey="systolic" label={t.visits.systolic} unit="mmHg" value={vitals.systolic} onChange={setVital('systolic')} placeholder="120" missing={touched && vitals.systolic === ''} />
+              <VitalField vkey="diastolic" label={t.visits.diastolic} unit="mmHg" value={vitals.diastolic} onChange={setVital('diastolic')} placeholder="80" missing={touched && vitals.diastolic === ''} />
             </div>
             <div className="form__row">
-              <VitalField vkey="pulse" label={t.visits.pulse} unit="bpm" value={vitals.pulse} onChange={setVital('pulse')} placeholder="72" />
-              <VitalField vkey="temp" label={t.visits.temp} unit="°F" value={vitals.temp} onChange={setVital('temp')} placeholder="98.6" />
+              <VitalField vkey="pulse" label={t.visits.pulse} unit="bpm" value={vitals.pulse} onChange={setVital('pulse')} placeholder="72" missing={touched && vitals.pulse === ''} />
+              <VitalField vkey="temp" label={t.visits.temp} unit="°F" value={vitals.temp} onChange={setVital('temp')} placeholder="98.6" missing={touched && vitals.temp === ''} />
             </div>
             <div className="form__row">
-              <VitalField vkey="spo2" label={t.visits.spo2} unit="%" value={vitals.spo2} onChange={setVital('spo2')} placeholder="98" />
-              <VitalField vkey="weight" label={t.visits.weight} unit="kg" value={vitals.weight} onChange={setVital('weight')} placeholder="60" />
+              <VitalField vkey="spo2" label={t.visits.spo2} unit="%" value={vitals.spo2} onChange={setVital('spo2')} placeholder="98" missing={touched && vitals.spo2 === ''} />
+              <VitalField vkey="weight" label={t.visits.weight} unit="kg" value={vitals.weight} onChange={setVital('weight')} placeholder="60" missing={touched && vitals.weight === ''} />
             </div>
-            <VitalField vkey="sugar" label={t.visits.sugar} unit="mg/dL" value={vitals.sugar} onChange={setVital('sugar')} placeholder="110" />
+            <VitalField vkey="sugar" label={t.visits.sugar} unit="mg/dL" value={vitals.sugar} onChange={setVital('sugar')} placeholder="110" missing={touched && vitals.sugar === ''} />
           </div>
         )}
 
@@ -149,15 +207,26 @@ export default function VisitForm() {
             <h3 className="section-title" style={{ color: 'var(--urgent)' }}>{t.visits.dangerSigns}</h3>
             <div className="symps">
               {SYMPTOMS.filter((s) => s.danger).map((s) => (
-                <SympChip key={s.id} id={s.id} label={pick(s.label, lang)} danger on={symptoms.includes(s.id)} onClick={() => toggleSymptom(s.id)} />
+                <SympChip key={s.id} label={pick(s.label, lang)} danger on={symptoms.includes(s.id)} onClick={() => toggleSymptom(s.id)} />
               ))}
             </div>
 
             <h3 className="section-title" style={{ marginTop: 16 }}>{t.visits.generalSymptoms}</h3>
             <div className="symps">
               {SYMPTOMS.filter((s) => !s.danger).map((s) => (
-                <SympChip key={s.id} id={s.id} label={pick(s.label, lang)} on={symptoms.includes(s.id)} onClick={() => toggleSymptom(s.id)} />
+                <SympChip key={s.id} label={pick(s.label, lang)} on={symptoms.includes(s.id)} onClick={() => toggleSymptom(s.id)} />
               ))}
+            </div>
+
+            <div className="symps" style={{ marginTop: 14 }}>
+              <SympChip
+                label={t.visits.noSymptoms}
+                on={noSymptoms}
+                onClick={() => {
+                  setNoSymptoms(!noSymptoms)
+                  setSymptoms([])
+                }}
+              />
             </div>
           </div>
         )}
@@ -165,8 +234,10 @@ export default function VisitForm() {
         {/* ---------- 4. referral ---------- */}
         {step === 3 && (
           <div className="fade-in form">
-            <label className="fld">
-              <span className="fld__label">{t.visits.notes}</span>
+            <label className={`fld${err(missing.notes)}`}>
+              <span className="fld__label">
+                {t.visits.notes} <Req show={touched && missing.notes} label={t.common.required} />
+              </span>
               <textarea
                 className="fld__input fld__input--area"
                 rows={3}
@@ -225,30 +296,43 @@ export default function VisitForm() {
       </div>
 
       {/* ---------- footer nav ---------- */}
-      <div className="form__nav">
-        <button
-          className="btn btn--outline"
-          onClick={() => (step === 0 ? navigate(-1) : setStep(step - 1))}
-        >
-          <ChevronLeft size={18} /> {t.common.back}
-        </button>
-        {step < 3 ? (
-          <button
-            className="btn btn--primary"
-            style={{ flex: 1 }}
-            disabled={!canNext}
-            onClick={() => setStep(step + 1)}
-          >
-            {t.common.next} <ChevronRight size={18} />
-          </button>
-        ) : (
-          <button className="btn btn--primary" style={{ flex: 1 }} onClick={() => setSaved(true)}>
-            <Check size={18} /> {t.visits.saveVisit}
-          </button>
+      <div className="form__nav form__nav--stack">
+        {touched && !stepValid && (
+          <p className="form__err">
+            <AlertTriangle size={14} />
+            {step === 2 ? t.visits.atLeastOneSymptom : step === 3 ? t.visits.notesRequired : t.visits.fillAll}
+          </p>
         )}
+        <div className="form__navRow">
+          <button
+            className="btn btn--outline"
+            onClick={() => {
+              setTouched(false)
+              step === 0 ? navigate(-1) : setStep(step - 1)
+            }}
+          >
+            <ChevronLeft size={18} /> {t.common.back}
+          </button>
+          <button className="btn btn--primary" style={{ flex: 1 }} onClick={goNext}>
+            {step < 3 ? (
+              <>
+                {t.common.next} <ChevronRight size={18} />
+              </>
+            ) : (
+              <>
+                <Check size={18} /> {editing ? t.visits.updateVisit : t.visits.saveVisit}
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   )
+}
+
+function Req({ show, label }: { show: boolean; label: string }) {
+  if (!show) return null
+  return <span className="fld__req">{label}</span>
 }
 
 function vitalName(k: VitalKey, t: ReturnType<typeof useT>['t']) {
@@ -265,7 +349,7 @@ function vitalName(k: VitalKey, t: ReturnType<typeof useT>['t']) {
 
 function SympChip({
   label, danger = false, on, onClick,
-}: { id: string; label: string; danger?: boolean; on: boolean; onClick: () => void }) {
+}: { label: string; danger?: boolean; on: boolean; onClick: () => void }) {
   return (
     <button
       className={`symp ${danger ? 'symp--danger' : ''} ${on ? 'symp--on' : ''}`}

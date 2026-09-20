@@ -2,12 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useT } from '../i18n'
 
-const HOLD_MS = 3000
+const HOLD_MS = 2000
+const SECONDS = HOLD_MS / 1000
 const R = 21
 const CIRC = 2 * Math.PI * R
 
 /**
- * Press-and-hold for 3s to fire. Releasing early cancels and the ring snaps back.
+ * Press-and-hold for 2s to fire. Releasing early cancels and the ring snaps back.
  * Deliberately hard to trigger by accident — this lives in a pocket all day.
  */
 export default function SosButton() {
@@ -35,7 +36,7 @@ export default function SosButton() {
     setProgress(p)
 
     // one haptic tick per second elapsed
-    const sec = Math.floor(p * 3)
+    const sec = Math.floor(p * SECONDS)
     if (sec > lastTick.current) {
       lastTick.current = sec
       navigator.vibrate?.(30)
@@ -67,7 +68,7 @@ export default function SosButton() {
 
   useEffect(() => () => { if (timer.current !== null) clearInterval(timer.current) }, [])
 
-  const remaining = Math.max(1, Math.ceil(3 - progress * 3))
+  const remaining = Math.max(1, Math.ceil(SECONDS - progress * SECONDS))
 
   return (
     <div className="sos-wrap">

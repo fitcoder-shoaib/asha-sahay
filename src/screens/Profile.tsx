@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Award, BadgeCheck, CalendarDays, ChevronRight, Globe, GraduationCap,
-  HeartPulse, IdCard, QrCode, ScanLine,
+  Award, BadgeCheck, CalendarDays, ChevronDown, ChevronRight, Globe, GraduationCap,
+  HeartPulse, IdCard, QrCode, ScanLine, Settings as SettingsIcon,
 } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { LANGS, useT } from '../i18n'
@@ -11,6 +12,7 @@ import { fromIso, fullDate, yearsSince } from '../lib/date'
 
 export default function Profile() {
   const { t, lang, setLang } = useT()
+  const [trainingsOpen, setTrainingsOpen] = useState(true)
   const years = yearsSince(profile.joiningDate)
   const maxNcd = Math.max(...profile.ncd.byMonth.map((m) => m.count))
 
@@ -78,6 +80,15 @@ export default function Profile() {
             <ChevronRight size={18} className="faint" />
           </Link>
 
+          <Link to="/settings" className="prof__link">
+            <span className="prof__linkIcon prof__linkIcon--plain"><SettingsIcon size={20} /></span>
+            <span className="col" style={{ flex: 1, minWidth: 0 }}>
+              <span className="prof__linkTitle">{t.profile.openSettings}</span>
+              <span className="prof__linkSub">{t.profile.openSettingsSub}</span>
+            </span>
+            <ChevronRight size={18} className="faint" />
+          </Link>
+
           <Link to="/scan" className="prof__link">
             <span className="prof__linkIcon prof__linkIcon--plain"><ScanLine size={20} /></span>
             <span className="col" style={{ flex: 1, minWidth: 0 }}>
@@ -105,7 +116,8 @@ export default function Profile() {
         <h3 className="section-title">{t.profile.serviceHistory}</h3>
         <section className="card">
           <ol className="tl">
-            {profile.serviceHistory.map((s, i) => (
+            {/* newest posting first */}
+            {[...profile.serviceHistory].reverse().map((s, i) => (
               <li key={i} className={`tl__item ${s.to === null ? 'tl__item--now' : ''}`}>
                 <span className="tl__dot" />
                 <span className="tl__when">
@@ -119,10 +131,23 @@ export default function Profile() {
         </section>
 
         {/* trainings */}
-        <h3 className="section-title">
-          {t.profile.trainings} <span className="faint">({profile.trainings.length})</span>
-        </h3>
-        <section className="card prof__trainings">
+        <button
+          className="prof__collapse"
+          onClick={() => setTrainingsOpen(!trainingsOpen)}
+          aria-expanded={trainingsOpen}
+        >
+          <span className="section-title" style={{ margin: 0 }}>
+            {t.profile.trainings} <span className="faint">({profile.trainings.length})</span>
+          </span>
+          <ChevronDown
+            size={18}
+            className={`prof__chev ${trainingsOpen ? 'prof__chev--open' : ''}`}
+          />
+        </button>
+        <section
+          className="card prof__trainings"
+          style={trainingsOpen ? undefined : { display: 'none' }}
+        >
           {profile.trainings.map((tr, i) => (
             <div key={i} className="train">
               <GraduationCap size={18} className="train__icon" />

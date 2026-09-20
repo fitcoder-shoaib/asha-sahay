@@ -16,6 +16,8 @@ import Certificate from './screens/Certificate'
 import QrId from './screens/QrId'
 import ScanQr from './screens/ScanQr'
 import Sos from './screens/Sos'
+import Settings from './screens/Settings'
+import Redeem from './screens/Redeem'
 
 export default function App() {
   return (
@@ -39,6 +41,8 @@ export default function App() {
             <Route path="/profile/qr" element={<QrId />} />
             <Route path="/scan" element={<ScanQr />} />
             <Route path="/sos" element={<Sos />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/redeem" element={<Redeem />} />
           </Routes>
         </PhoneFrame>
       </BrowserRouter>

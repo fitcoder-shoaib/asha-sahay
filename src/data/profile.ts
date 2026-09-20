@@ -24,8 +24,13 @@ export const profile = {
   districtL: { en: 'Palakkad', hi: 'पालक्काड', ml: 'പാലക്കാട്' } as L,
   state: { en: 'Kerala', hi: 'केरल', ml: 'കേരളം' } as L,
 
-  supervisor: 'Smt. Radhika P · +91 99999 00002',
-  anm: 'Sub-centre Vadakkanchery · +91 99999 00003',
+  /** Alerted by SOS alongside the police. Editable from Settings. */
+  emergency: {
+    name: { en: 'Suresh Menon', hi: 'सुरेश मेनन', ml: 'സുരേഷ് മേനോൻ' } as L,
+    relation: { en: 'Husband', hi: 'पति', ml: 'ഭർത്താവ്' } as L,
+    phone: '+91 99999 00002',
+  },
+  police: { number: '100', label: { en: 'Palakkad control room', hi: 'पालक्काड कंट्रोल रूम', ml: 'പാലക്കാട് കൺട്രോൾ റൂം' } as L },
 
   households: 187,
   population: 842,

@@ -18,7 +18,7 @@ export default function Visits() {
           (p) =>
             pick(p.name, lang).toLowerCase().includes(needle) ||
             p.name.en.toLowerCase().includes(needle) ||
-            p.household.toLowerCase().includes(needle),
+            pick(p.address, lang).toLowerCase().includes(needle),
         )
       : patients
     // urgent first, then most recently visited
@@ -63,8 +63,9 @@ export default function Visits() {
                 <span className="col" style={{ flex: 1, minWidth: 0 }}>
                   <span className="pt__name">{pick(p.name, lang)}</span>
                   <span className="pt__meta">
-                    {p.age} {t.visits.yrs} · {genderLabel[p.gender]} · {p.household}
+                    {p.age} {t.visits.yrs} · {genderLabel[p.gender]}
                   </span>
+                  <span className="pt__addr">{pick(p.address, lang)}</span>
                   {lv && (
                     <span className="pt__last">
                       {t.visits.lastVisit}: {dayLabel(fromIso(lv.date), lang)}

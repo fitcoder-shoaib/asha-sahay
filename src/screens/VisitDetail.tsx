@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom'
-import { AlertTriangle, Check } from 'lucide-react'
+import { Link, useParams } from 'react-router-dom'
+import { AlertTriangle, Check, Pencil } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
@@ -37,7 +37,7 @@ export default function VisitDetail() {
     <div className="screen">
       <AppHeader
         title={pick(patient.name, lang)}
-        subtitle={`${patient.age} ${t.visits.yrs} · ${genderLabel[patient.gender]} · ${patient.household}`}
+        subtitle={`${patient.age} ${t.visits.yrs} · ${genderLabel[patient.gender]} · ${pick(patient.address, lang)}`}
         back
       />
 
@@ -98,6 +98,14 @@ export default function VisitDetail() {
               )}
 
               <p className="vd__notes">{pick(v.notes, lang)}</p>
+
+              <Link
+                to="/visits/new"
+                state={{ patientId: patient.id, visitIndex: i }}
+                className="btn btn--outline vd__edit"
+              >
+                <Pencil size={15} /> {t.common.edit}
+              </Link>
             </section>
           )
         })}

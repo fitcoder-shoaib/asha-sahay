@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import StatusChip from '../components/StatusChip'
@@ -7,11 +7,18 @@ import { pick } from '../data/types'
 import {
   payments, paymentsInMonth, sumBy, STATUS_ORDER, type PayStatus, type Payment,
 } from '../data/payments'
+import { salary, type SalaryStatus } from '../data/salary'
 import {
   TODAY, dayLabel, fromIso, iso, monthGrid, monthLabel, rupees, sameDay, weekdayInitials,
 } from '../lib/date'
 
 type Filter = 'all' | PayStatus
+
+const LOCALE = { en: 'en-IN', hi: 'hi-IN', ml: 'ml-IN' } as const
+
+function salaryLabel(s: SalaryStatus, t: ReturnType<typeof useT>['t']) {
+  return { paid: t.calendar.salaryPaid, pending: t.calendar.salaryPending, delayed: t.calendar.salaryDelayed }[s]
+}
 
 export default function Calendar() {
   const { t, lang } = useT()
@@ -19,6 +26,14 @@ export default function Calendar() {
   const [selected, setSelected] = useState<string | null>(null)
   const [filter, setFilter] = useState<Filter>('all')
   const [openId, setOpenId] = useState<string | null>(null)
+
+  // Keep the month being viewed visible in the salary strip.
+  const salaryRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    salaryRef.current
+      ?.querySelector('.cal__salaryItem--on')
+      ?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+  }, [cursor])
 
   const grid = useMemo(() => monthGrid(cursor.getFullYear(), cursor.getMonth()), [cursor])
   const monthPayments = useMemo(
@@ -80,6 +95,30 @@ export default function Calendar() {
             <Total label={t.calendar.upcoming} value={totals.upcoming} tone="upcoming" />
             <Total label={t.calendar.pending} value={totals.pending} tone="pending" />
             <Total label={t.calendar.inProcess} value={totals.process} tone="process" />
+          </div>
+
+          {/* monthly salary status — the number a worker actually chases */}
+          <p className="cal__salaryLabel">{t.calendar.salaryStatus}</p>
+          <div className="cal__salary" ref={salaryRef}>
+            {salary.map((m) => {
+              const [y, mo] = m.month.split('-').map(Number)
+              const on = cursor.getFullYear() === y && cursor.getMonth() === mo - 1
+              return (
+                <button
+                  key={m.month}
+                  className={`cal__salaryItem cal__salaryItem--${m.status} ${on ? 'cal__salaryItem--on' : ''}`}
+                  onClick={() => {
+                    setCursor(new Date(y, mo - 1, 1))
+                    setSelected(null)
+                  }}
+                >
+                  <span className="cal__salaryMonth">
+                    {fromIso(`${m.month}-01`).toLocaleDateString(LOCALE[lang], { month: 'short' })}
+                  </span>
+                  <span className="cal__salaryState">{salaryLabel(m.status, t)}</span>
+                </button>
+              )
+            })}
           </div>
 
           <div className="cal__nav">
