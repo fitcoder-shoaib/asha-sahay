@@ -1,4 +1,4 @@
-# ASHA Sahayak — clickable prototype
+# ASHA Sahay — clickable prototype
 
 A mobile app concept for **ASHA workers** (India's accredited social health activists).
 This is a **clickable prototype for a project submission**, not a production app: every screen

@@ -16,7 +16,7 @@ export default function QrId() {
         <div className="qr__card">
           <div className="qr__head">
             <IdCard size={18} />
-            <span>ASHA SAHAYAK</span>
+            <span>ASHA SAHAY</span>
           </div>
 
           <div className="qr__code">
