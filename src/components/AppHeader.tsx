@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ChevronLeft, Menu } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, House, Menu } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import SosButton from './SosButton'
 import DrawerMenu from './DrawerMenu'
 import { useT } from '../i18n'
@@ -16,6 +16,7 @@ type Props = {
 
 export default function AppHeader({ title, subtitle, back = false, sos = true }: Props) {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { t } = useT()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -36,6 +37,12 @@ export default function AppHeader({ title, subtitle, back = false, sos = true }:
           <h1 className="hdr__title">{title}</h1>
           {subtitle && <p className="hdr__sub">{subtitle}</p>}
         </div>
+
+        {pathname !== '/' && (
+          <button className="hdr__btn hdr__home" onClick={() => navigate('/')} aria-label={t.nav.home}>
+            <House size={21} />
+          </button>
+        )}
 
         {sos && <SosButton />}
       </header>

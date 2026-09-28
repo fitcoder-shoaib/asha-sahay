@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './auth'
 import { I18nProvider } from './i18n'
 import PhoneFrame from './components/PhoneFrame'
 import TabsLayout from './components/TabsLayout'
+import Splash from './components/Splash'
 
 import Home from './screens/Home'
 import Calendar from './screens/Calendar'
@@ -31,6 +32,7 @@ export default function App() {
         <BrowserRouter>
           <PhoneFrame>
             <Shell />
+            <Splash />
           </PhoneFrame>
         </BrowserRouter>
       </AuthProvider>

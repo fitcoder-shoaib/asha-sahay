@@ -367,3 +367,68 @@
   overflow-wrap: anywhere;
 }
 .auth__privacy svg { flex: none; margin-top: 2px; }
+
+/* ---------- logo ---------- */
+
+.logo-badge {
+  display: inline-grid; place-items: center; flex: none;
+  background: #fff;
+}
+.logo-badge img { display: block; }
+
+.hdr__home { margin-left: 0; background: rgba(255,255,255,.14); }
+
+/* ---------- opening splash ---------- */
+
+.splash {
+  position: absolute; inset: 0; z-index: 55;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; padding: 24px;
+  background: radial-gradient(90% 60% at 50% 38%, #FFFBEF 0%, #FFFFFF 70%);
+  cursor: pointer;
+  transition: opacity .45s ease, transform .45s ease;
+}
+.splash--out { opacity: 0; transform: scale(1.06); pointer-events: none; }
+
+.splash__stage { position: relative; width: 220px; height: 220px; display: grid; place-items: center; }
+
+.splash__sun {
+  position: absolute; width: 150px; height: 150px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(250,190,40,.45) 0%, rgba(250,190,40,0) 70%);
+  animation: splashSun 1.6s ease-out both;
+}
+.splash__mark {
+  position: relative; width: 200px; height: 200px;
+  animation: splashMark .9s cubic-bezier(.34,1.56,.64,1) .15s both;
+}
+.splash__word {
+  width: min(280px, 80%); height: auto;
+  animation: splashWord .7s ease-out .85s both;
+}
+.splash__dots { display: flex; gap: 7px; margin-top: 10px; animation: splashWord .4s ease-out 1.3s both; }
+.splash__dots span {
+  width: 8px; height: 8px; border-radius: 50%; background: #2E9E3E;
+  animation: splashDot 1s ease-in-out infinite;
+}
+.splash__dots span:nth-child(2) { animation-delay: .15s; background: #F2B51F; }
+.splash__dots span:nth-child(3) { animation-delay: .3s; background: #123F82; }
+
+@keyframes splashSun {
+  from { transform: scale(.2); opacity: 0; }
+  to   { transform: scale(1.9); opacity: 1; }
+}
+@keyframes splashMark {
+  from { transform: scale(.4) translateY(20px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes splashWord {
+  from { transform: translateY(18px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes splashDot {
+  0%, 100% { transform: translateY(0); opacity: .5; }
+  50%      { transform: translateY(-6px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash__sun, .splash__mark, .splash__word, .splash__dots, .splash__dots span { animation: none; }
+}
