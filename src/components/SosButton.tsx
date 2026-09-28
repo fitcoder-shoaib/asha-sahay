@@ -91,7 +91,6 @@ export default function SosButton() {
         </svg>
         <span className="sos__label">{holding ? remaining : 'SOS'}</span>
       </button>
-      {holding && <span className="sos__hint">{t.sos.activating}</span>}
     </div>
   )
 }
