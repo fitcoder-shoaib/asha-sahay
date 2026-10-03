@@ -401,11 +401,11 @@
   position: relative; width: 200px; height: 200px;
   animation: splashMark .9s cubic-bezier(.34,1.56,.64,1) .15s both;
 }
-.splash__word {
-  width: min(280px, 80%); height: auto;
-  animation: splashWord .7s ease-out .85s both;
-}
-.splash__dots { display: flex; gap: 7px; margin-top: 10px; animation: splashWord .4s ease-out 1.3s both; }
+.splash__text { width: min(280px, 80%); display: flex; flex-direction: column; }
+.splash__name, .splash__slogan { width: 100%; height: auto; display: block; }
+.splash__name   { animation: splashWord .6s ease-out .9s both; }
+.splash__slogan { animation: splashWord .6s ease-out 1.5s both; }
+.splash__dots { display: flex; gap: 7px; margin-top: 10px; animation: splashWord .4s ease-out 2s both; }
 .splash__dots span {
   width: 8px; height: 8px; border-radius: 50%; background: #2E9E3E;
   animation: splashDot 1s ease-in-out infinite;
@@ -430,5 +430,5 @@
   50%      { transform: translateY(-6px); opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .splash__sun, .splash__mark, .splash__word, .splash__dots, .splash__dots span { animation: none; }
+  .splash__sun, .splash__mark, .splash__name, .splash__slogan, .splash__dots, .splash__dots span { animation: none; }
 }

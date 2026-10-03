@@ -1,6 +1,6 @@
 import type { L } from './types'
 
-export type PayStatus = 'received' | 'process' | 'pending' | 'upcoming'
+export type PayStatus = 'received' | 'pending' | 'process'
 
 export type Payment = {
   id: string
@@ -45,23 +45,22 @@ export const payments: Payment[] = [
   p('s6', S.ncd, 'pending', '2026-09-16', 34, 25),
   p('s7', S.vhsnd, 'pending', '2026-09-19', 1, 200),
   p('s8', S.tb, 'process', '2026-09-22', 2, 500),
-  p('s9', S.fp, 'upcoming', '2026-09-25', 5, 100),
-  p('s10', S.ab, 'upcoming', '2026-09-28', 12, 50),
-  p('s11', S.immun, 'upcoming', '2026-09-30', 4, 150),
+  p('s9', S.fp, 'pending', '2026-09-25', 5, 100),
+  p('s10', S.ab, 'pending', '2026-09-28', 12, 50),
+  p('s11', S.immun, 'pending', '2026-09-30', 4, 150),
 
-  // ---- October 2026 (claimed ahead) ----
-  p('o1', S.fixed, 'upcoming', '2026-10-05', 1, 2000),
-  p('o2', S.hbnc, 'upcoming', '2026-10-09', 4, 250),
-  p('o3', S.ncd, 'upcoming', '2026-10-20', 40, 25),
+  // ---- October 2026 (not yet paid) ----
+  p('o1', S.fixed, 'pending', '2026-10-05', 1, 2000),
+  p('o2', S.hbnc, 'pending', '2026-10-09', 4, 250),
+  p('o3', S.ncd, 'pending', '2026-10-20', 40, 25),
 ]
 
-export const STATUS_ORDER: PayStatus[] = ['upcoming', 'pending', 'process', 'received']
+export const STATUS_ORDER: PayStatus[] = ['received', 'pending', 'process']
 
 export const statusVar: Record<PayStatus, string> = {
   received: 'received',
   process: 'process',
   pending: 'pending',
-  upcoming: 'process',
 }
 
 export const paymentsOn = (isoDate: string) => payments.filter((x) => x.date === isoDate)

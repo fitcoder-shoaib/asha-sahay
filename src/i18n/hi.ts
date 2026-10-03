@@ -99,10 +99,9 @@ const hi: Dict = {
 
   calendar: {
     title: 'भुगतान ट्रैकर',
-    upcoming: 'आगामी',
     pending: 'लंबित',
     inProcess: 'प्रक्रिया में',
-    received: 'प्राप्त',
+    received: 'पूर्ण',
     noneForDay: 'इस दिन कोई भुगतान नहीं',
     noneForFilter: 'इस फ़िल्टर में कुछ नहीं',
     selectDay: 'भुगतान देखने के लिए दिन चुनें',

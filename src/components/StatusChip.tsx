@@ -7,7 +7,6 @@ export default function StatusChip({ status }: { status: PayStatus }) {
     received: t.calendar.received,
     process: t.calendar.inProcess,
     pending: t.calendar.pending,
-    upcoming: t.calendar.upcoming,
   }
   return <span className={`chip chip--${status}`}>{label[status]}</span>
 }

@@ -12,7 +12,7 @@ import { fromIso, fullDate, yearsSince } from '../lib/date'
 
 export default function Profile() {
   const { t, lang, setLang } = useT()
-  const [trainingsOpen, setTrainingsOpen] = useState(true)
+  const [trainingsOpen, setTrainingsOpen] = useState(false)
   const years = yearsSince(profile.joiningDate)
   const maxNcd = Math.max(...profile.ncd.byMonth.map((m) => m.count))
 

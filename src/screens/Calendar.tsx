@@ -56,10 +56,9 @@ export default function Calendar() {
   }, [])
 
   const totals = {
-    upcoming: sumBy(monthPayments, 'upcoming'),
+    received: sumBy(monthPayments, 'received'),
     pending: sumBy(monthPayments, 'pending'),
     process: sumBy(monthPayments, 'process'),
-    received: sumBy(monthPayments, 'received'),
   }
 
   const listed = useMemo(() => {
@@ -75,24 +74,23 @@ export default function Calendar() {
 
   const filters: { key: Filter; label: string }[] = [
     { key: 'all', label: t.common.all },
-    { key: 'upcoming', label: t.calendar.upcoming },
+    { key: 'received', label: t.calendar.received },
     { key: 'pending', label: t.calendar.pending },
     { key: 'process', label: t.calendar.inProcess },
-    { key: 'received', label: t.calendar.received },
   ]
 
   return (
     <div className="screen">
       <AppHeader
         title={t.calendar.title}
-        subtitle={`${t.calendar.received} ${rupees(totals.received)} · ${monthLabel(cursor, lang)}`}
+        subtitle={monthLabel(cursor, lang)}
       />
 
       <div className="cal">
         {/* ---------- upper half: the calendar ---------- */}
         <section className="cal__top">
           <div className="cal__totals">
-            <Total label={t.calendar.upcoming} value={totals.upcoming} tone="upcoming" />
+            <Total label={t.calendar.received} value={totals.received} tone="received" />
             <Total label={t.calendar.pending} value={totals.pending} tone="pending" />
             <Total label={t.calendar.inProcess} value={totals.process} tone="process" />
           </div>

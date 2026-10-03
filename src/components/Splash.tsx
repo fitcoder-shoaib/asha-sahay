@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 
-const SHOW_MS = 2600
+const SHOW_MS = 3200
 const FADE_MS = 450
 
 /**
  * Opening animation, played once each time the app is loaded.
- * The emblem pops in over a rising sun, then the wordmark and slogan slide up.
+ * The emblem pops in over a rising sun, then the name, then the slogan slide up.
  * Tap anywhere to skip.
  */
 export default function Splash() {
@@ -36,7 +36,10 @@ export default function Splash() {
         <div className="splash__sun" />
         <img className="splash__mark" src="/logo-mark.png" alt="ASHA Sahay" draggable={false} />
       </div>
-      <img className="splash__word" src="/logo-wordmark.png" alt="" draggable={false} />
+      <div className="splash__text">
+        <img className="splash__name" src="/logo-name.png" alt="" draggable={false} />
+        <img className="splash__slogan" src="/logo-slogan.png" alt="" draggable={false} />
+      </div>
       <div className="splash__dots">
         <span /><span /><span />
       </div>

@@ -99,10 +99,9 @@ const ml: Dict = {
 
   calendar: {
     title: 'പേയ്‌മെന്റ് ട്രാക്കർ',
-    upcoming: 'വരാനുള്ളത്',
     pending: 'കുടിശ്ശിക',
     inProcess: 'പ്രോസസ്സിൽ',
-    received: 'ലഭിച്ചു',
+    received: 'പൂർത്തിയായി',
     noneForDay: 'ഈ ദിവസം പേയ്‌മെന്റ് ഇല്ല',
     noneForFilter: 'ഈ ഫിൽട്ടറിൽ ഒന്നുമില്ല',
     selectDay: 'പേയ്‌മെന്റ് കാണാൻ ഒരു ദിവസം തിരഞ്ഞെടുക്കുക',

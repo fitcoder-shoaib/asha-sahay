@@ -97,10 +97,9 @@ const en = {
 
   calendar: {
     title: 'Payment tracker',
-    upcoming: 'Upcoming',
     pending: 'Pending',
     inProcess: 'In process',
-    received: 'Received',
+    received: 'Done',
     noneForDay: 'No payments on this day',
     noneForFilter: 'Nothing matches this filter',
     selectDay: 'Tap a day to see its payments',

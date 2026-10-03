@@ -324,7 +324,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .chip--received { background: var(--received-bg); color: var(--received); }
 .chip--process  { background: var(--process-bg);  color: var(--process); }
 .chip--pending  { background: var(--pending-bg);  color: var(--pending); }
-.chip--upcoming { background: #EDE9FE;            color: #6D28D9; }
 
 /* ---------- calendar: the 50/50 split ---------- */
 
@@ -350,7 +349,7 @@ input, textarea, select { font: inherit; color: inherit; }
   display: flex; flex-direction: column; gap: 1px;
   min-width: 0;
 }
-.cal__total--upcoming { background: #EDE9FE; }
+.cal__total--received { background: var(--received-bg); }
 .cal__total--pending  { background: var(--pending-bg); }
 .cal__total--process  { background: var(--process-bg); }
 
@@ -423,7 +422,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .cal__dot--received { background: var(--received); }
 .cal__dot--process  { background: var(--process); }
 .cal__dot--pending  { background: var(--pending); }
-.cal__dot--upcoming { background: #7C3AED; }
 .cal__day--sel .cal__dot { box-shadow: 0 0 0 1.5px rgba(255,255,255,.9); }
 
 /* lower half */
@@ -487,7 +485,6 @@ input, textarea, select { font: inherit; color: inherit; }
 .pay__bar--received { background: var(--received); }
 .pay__bar--process  { background: var(--process); }
 .pay__bar--pending  { background: var(--pending); }
-.pay__bar--upcoming { background: #7C3AED; }
 
 .pay__body {
   flex: 1; min-width: 0;
