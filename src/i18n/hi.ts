@@ -102,7 +102,7 @@ const hi: Dict = {
     pending: 'लंबित',
     noneForDay: 'इस दिन कोई भुगतान नहीं',
     noneForMonth: 'इस माह कोई भुगतान नहीं',
-    creditedIn: 'वेतन जमा',
+    salaryForMonth: 'वेतन —',
     dueOn: 'देय दिनांक',
     creditedOn: 'जमा दिनांक',
     lateBy: 'विलंब से मिला',

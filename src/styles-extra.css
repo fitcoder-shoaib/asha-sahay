@@ -710,3 +710,68 @@
   text-align: center;
   overflow-wrap: anywhere;
 }
+
+/* ---------- year-at-a-glance grid ---------- */
+
+.yr__nav {
+  flex: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0 6px;
+}
+.yr__label { font-size: 16px; font-weight: 800; letter-spacing: .01em; }
+.cal__navBtn:disabled { opacity: .3; }
+
+.yr__grid {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 7px;
+}
+
+.yr__cell {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 6px 9px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: var(--bg);
+  text-align: left;
+}
+.yr__cellMonth {
+  font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .04em;
+  overflow-wrap: anywhere; line-height: 1.1;
+}
+.yr__cellState {
+  font-size: 10.5px; font-weight: 700;
+  overflow-wrap: anywhere; line-height: 1.15;
+}
+
+.yr__cell--paid    { background: var(--received-bg); }
+.yr__cell--paid .yr__cellMonth  { color: #3D6B4C; }
+.yr__cell--paid .yr__cellState  { color: var(--received); }
+
+.yr__cell--delayed { background: var(--urgent-bg); }
+.yr__cell--delayed .yr__cellMonth { color: #8C3A3A; }
+.yr__cell--delayed .yr__cellState { color: var(--urgent); }
+
+.yr__cell--pending { background: var(--pending-bg); }
+.yr__cell--pending .yr__cellMonth { color: #8A6420; }
+.yr__cell--pending .yr__cellState { color: var(--pending); }
+
+.yr__cell--none { background: var(--bg); opacity: .5; }
+.yr__cell--none .yr__cellMonth { color: var(--faint); }
+.yr__cell--none .yr__cellState { color: var(--faint); }
+
+.yr__cell--sel { border-color: var(--text); }
+/* the current month keeps a marker even when another cell is selected */
+.yr__cell--now .yr__cellMonth::after {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px; margin-left: 5px;
+  border-radius: 999px;
+  background: currentColor;
+  vertical-align: middle;
+}

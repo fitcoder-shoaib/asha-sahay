@@ -102,7 +102,7 @@ const ml: Dict = {
     pending: 'കുടിശ്ശിക',
     noneForDay: 'ഈ ദിവസം പേയ്‌മെന്റ് ഇല്ല',
     noneForMonth: 'ഈ മാസം പേയ്‌മെന്റ് ഇല്ല',
-    creditedIn: 'ശമ്പളം ലഭിച്ചത്',
+    salaryForMonth: 'ശമ്പളം —',
     dueOn: 'ലഭിക്കേണ്ട തീയതി',
     creditedOn: 'ലഭിച്ച തീയതി',
     lateBy: 'വൈകി ലഭിച്ചത്',

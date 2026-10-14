@@ -100,7 +100,7 @@ const en = {
     pending: 'Pending',
     noneForDay: 'No payments on this day',
     noneForMonth: 'No payments this month',
-    creditedIn: 'Salary credited in',
+    salaryForMonth: 'Salary for',
     dueOn: 'Due on',
     creditedOn: 'Credited on',
     lateBy: 'Arrived late by',
