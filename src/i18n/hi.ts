@@ -103,6 +103,8 @@ const hi: Dict = {
     noneForDay: 'इस दिन कोई भुगतान नहीं',
     noneForMonth: 'इस माह कोई भुगतान नहीं',
     salaryForMonth: 'वेतन —',
+    legendDue: 'देय',
+    legendCredited: 'जमा',
     dueOn: 'देय दिनांक',
     creditedOn: 'जमा दिनांक',
     lateBy: 'विलंब से मिला',

@@ -47,6 +47,17 @@ export const monthLabel = (d: Date, lang: Lang) =>
 export const dayLabel = (d: Date, lang: Lang) =>
   d.toLocaleDateString(LOCALE[lang], { day: 'numeric', month: 'short' })
 
+/** Date plus clock time, e.g. "10 September 2026, 2:32 pm". */
+export const fullDateTime = (d: Date, time: string, lang: Lang) => {
+  const [h, m] = time.split(':').map(Number)
+  const dt = new Date(d)
+  dt.setHours(h, m, 0, 0)
+  return dt.toLocaleString(LOCALE[lang], {
+    day: 'numeric', month: 'long', year: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+  })
+}
+
 export const fullDate = (d: Date, lang: Lang) =>
   d.toLocaleDateString(LOCALE[lang], { day: 'numeric', month: 'long', year: 'numeric' })
 

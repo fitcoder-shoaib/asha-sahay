@@ -18,6 +18,8 @@ export type SalaryMonth = {
   dueOn: string
   /** When it actually landed. Absent while pending. */
   creditedOn?: string
+  /** Clock time of the credit, HH:mm. Bank batches run in working hours. */
+  creditedTime?: string
   /** Days past dueOn — how late it arrived, or how overdue it still is. */
   lateBy?: number
 }
@@ -78,11 +80,19 @@ function build(): SalaryMonth[] {
       continue
     }
 
+    // Deterministic working-hours timestamp, so the same credit always
+    // carries the same time rather than shifting on every reload.
+    const stamp = seeded(key + ':t')
+    const hh = 9 + (stamp % 9)
+    const mm = (stamp >> 4) % 60
+    const creditedTime = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`
+
     out.push({
       month: key,
       amount: AMOUNT,
       status: late ? 'delayed' : 'paid',
       dueOn,
+      creditedTime,
       creditedOn: iso(credited),
       ...(late ? { lateBy: offset } : {}),
     })

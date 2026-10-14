@@ -103,6 +103,8 @@ const ml: Dict = {
     noneForDay: 'ഈ ദിവസം പേയ്‌മെന്റ് ഇല്ല',
     noneForMonth: 'ഈ മാസം പേയ്‌മെന്റ് ഇല്ല',
     salaryForMonth: 'ശമ്പളം —',
+    legendDue: 'ലഭിക്കേണ്ടത്',
+    legendCredited: 'ലഭിച്ചു',
     dueOn: 'ലഭിക്കേണ്ട തീയതി',
     creditedOn: 'ലഭിച്ച തീയതി',
     lateBy: 'വൈകി ലഭിച്ചത്',

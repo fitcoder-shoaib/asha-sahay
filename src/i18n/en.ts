@@ -101,6 +101,8 @@ const en = {
     noneForDay: 'No payments on this day',
     noneForMonth: 'No payments this month',
     salaryForMonth: 'Salary for',
+    legendDue: 'Due',
+    legendCredited: 'Credited',
     dueOn: 'Due on',
     creditedOn: 'Credited on',
     lateBy: 'Arrived late by',
