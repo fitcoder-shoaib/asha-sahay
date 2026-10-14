@@ -103,6 +103,7 @@ const hi: Dict = {
     inProcess: 'प्रक्रिया में',
     received: 'पूर्ण',
     noneForDay: 'इस दिन कोई भुगतान नहीं',
+    noneForMonth: 'इस माह कोई भुगतान नहीं',
     noneForFilter: 'इस फ़िल्टर में कुछ नहीं',
     selectDay: 'भुगतान देखने के लिए दिन चुनें',
     entriesFor: 'भुगतान',

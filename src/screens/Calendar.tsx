@@ -190,7 +190,11 @@ export default function Calendar() {
           <div className="scroll cal__list">
             {listed.length === 0 ? (
               <p className="cal__empty">
-                {filter === 'all' ? t.calendar.noneForDay : t.calendar.noneForFilter}
+                {filter !== 'all'
+                  ? t.calendar.noneForFilter
+                  : selected
+                    ? t.calendar.noneForDay
+                    : t.calendar.noneForMonth}
               </p>
             ) : (
               listed.map((x) => (

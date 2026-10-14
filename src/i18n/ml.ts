@@ -103,6 +103,7 @@ const ml: Dict = {
     inProcess: 'പ്രോസസ്സിൽ',
     received: 'പൂർത്തിയായി',
     noneForDay: 'ഈ ദിവസം പേയ്‌മെന്റ് ഇല്ല',
+    noneForMonth: 'ഈ മാസം പേയ്‌മെന്റ് ഇല്ല',
     noneForFilter: 'ഈ ഫിൽട്ടറിൽ ഒന്നുമില്ല',
     selectDay: 'പേയ്‌മെന്റ് കാണാൻ ഒരു ദിവസം തിരഞ്ഞെടുക്കുക',
     entriesFor: 'പേയ്‌മെന്റുകൾ',

@@ -24,35 +24,19 @@ const S = {
   fp: { en: 'Family planning counselling', hi: 'परिवार नियोजन परामर्श', ml: 'കുടുംബാസൂത്രണ കൗൺസിലിംഗ്' },
   ab: { en: 'Ayushman card registration', hi: 'आयुष्मान कार्ड पंजीकरण', ml: 'ആയുഷ്മാൻ കാർഡ് രജിസ്ട്രേഷൻ' },
 } satisfies Record<string, L>
+// Catalogue of real NHM scheme names. Only the three seeded below are shown;
+// the rest are here so another example is a one-line addition.
 
 const p = (
   id: string, scheme: L, status: PayStatus, date: string, units: number, rate: number,
 ): Payment => ({ id, scheme, status, date, units, rate, amount: units * rate })
 
 export const payments: Payment[] = [
-  // ---- August 2026 (settled) ----
-  p('a1', S.fixed, 'received', '2026-08-05', 1, 2000),
-  p('a2', S.jsy, 'received', '2026-08-11', 3, 600),
-  p('a3', S.immun, 'received', '2026-08-18', 4, 150),
-  p('a4', S.ncd, 'received', '2026-08-26', 57, 25),
-
-  // ---- September 2026 (current month) ----
-  p('s1', S.fixed, 'received', '2026-09-05', 1, 2000),
-  p('s2', S.hbnc, 'received', '2026-09-08', 6, 250),
-  p('s3', S.jsy, 'process', '2026-09-12', 2, 600),
-  p('s4', S.immun, 'process', '2026-09-12', 3, 150),
-  p('s5', S.anc, 'pending', '2026-09-16', 9, 100),
-  p('s6', S.ncd, 'pending', '2026-09-16', 34, 25),
-  p('s7', S.vhsnd, 'pending', '2026-09-19', 1, 200),
-  p('s8', S.tb, 'process', '2026-09-22', 2, 500),
-  p('s9', S.fp, 'pending', '2026-09-25', 5, 100),
-  p('s10', S.ab, 'pending', '2026-09-28', 12, 50),
-  p('s11', S.immun, 'pending', '2026-09-30', 4, 150),
-
-  // ---- October 2026 (not yet paid) ----
-  p('o1', S.fixed, 'pending', '2026-10-05', 1, 2000),
-  p('o2', S.hbnc, 'pending', '2026-10-09', 4, 250),
-  p('o3', S.ncd, 'pending', '2026-10-20', 40, 25),
+  // One worked example per status, all in the current month so the default
+  // view shows all three. Dates are spread so each lands on its own day.
+  p('c1', S.fixed, 'received', '2026-09-05', 1, 2000),   // completed
+  p('c2', S.jsy, 'process', '2026-09-12', 2, 600),       // in process
+  p('c3', S.ncd, 'pending', '2026-09-25', 34, 25),       // due
 ]
 
 export const STATUS_ORDER: PayStatus[] = ['received', 'pending', 'process']

@@ -101,6 +101,7 @@ const en = {
     inProcess: 'In process',
     received: 'Done',
     noneForDay: 'No payments on this day',
+    noneForMonth: 'No payments this month',
     noneForFilter: 'Nothing matches this filter',
     selectDay: 'Tap a day to see its payments',
     entriesFor: 'Payments for',
