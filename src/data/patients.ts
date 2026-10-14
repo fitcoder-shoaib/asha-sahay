@@ -1,5 +1,6 @@
 import type { L } from './types'
 import type { VitalValues } from '../lib/vitals'
+import { daysAgo } from '../lib/date'
 
 export type Visit = {
   date: string
@@ -32,7 +33,7 @@ export const patients: Patient[] = [
     age: 64, gender: 'female', address: { en: 'Thekkeveedu, Ward 7', hi: 'थेक्केवीडु, वार्ड 7', ml: 'തെക്കേവീട്, വാർഡ് 7' },
     visits: [
       {
-        date: '2026-09-18',
+        date: daysAgo(2),
         vitals: v('186', '118', '96', '98.4', '58', '96', '243'),
         symptoms: ['headache', 'dizziness', 'blurredVision'],
         notes: {
@@ -43,7 +44,7 @@ export const patients: Patient[] = [
         urgent: true,
       },
       {
-        date: '2026-08-21',
+        date: daysAgo(30),
         vitals: v('158', '94', '84', '98.2', '58', '97', '198'),
         symptoms: ['headache'],
         notes: {
@@ -61,7 +62,7 @@ export const patients: Patient[] = [
     age: 29, gender: 'female', address: { en: 'Puthanpurayil, Ward 8', hi: 'पुथनपुरयिल, वार्ड 8', ml: 'പുത്തൻപുരയിൽ, വാർഡ് 8' },
     visits: [
       {
-        date: '2026-09-17',
+        date: daysAgo(3),
         vitals: v('112', '74', '88', '98.6', '61', '98', '104'),
         symptoms: ['nausea'],
         notes: {
@@ -79,7 +80,7 @@ export const patients: Patient[] = [
     age: 71, gender: 'male', address: { en: 'Nair Madom, Ward 7', hi: 'नायर मडोम, वार्ड 7', ml: 'നായർ മഠം, വാർഡ് 7' },
     visits: [
       {
-        date: '2026-09-15',
+        date: daysAgo(5),
         vitals: v('148', '88', '78', '98.1', '66', '91', '156'),
         symptoms: ['breathless', 'cough'],
         notes: {
@@ -97,7 +98,7 @@ export const patients: Patient[] = [
     age: 4, gender: 'female', address: { en: 'Rahman Manzil, Ward 8', hi: 'रहमान मंज़िल, वार्ड 8', ml: 'റഹ്മാൻ മൻസിൽ, വാർഡ് 8' },
     visits: [
       {
-        date: '2026-09-14',
+        date: daysAgo(6),
         vitals: v('', '', '104', '100.8', '14', '97', ''),
         symptoms: ['fever', 'cough'],
         notes: {
@@ -116,7 +117,7 @@ export const patients: Patient[] = [
     age: 58, gender: 'male', address: { en: 'Kizhakkethil, Ward 6', hi: 'किष़क्केथिल, वार्ड 6', ml: 'കിഴക്കേതിൽ, വാർഡ് 6' },
     visits: [
       {
-        date: '2026-09-11',
+        date: daysAgo(9),
         vitals: v('134', '86', '80', '98.3', '72', '97', '182'),
         symptoms: ['thirst', 'frequentUrination'],
         notes: {
@@ -135,7 +136,7 @@ export const patients: Patient[] = [
     age: 47, gender: 'female', address: { en: 'Chandran Nivas, Ward 7', hi: 'चंद्रन निवास, वार्ड 7', ml: 'ചന്ദ്രൻ നിവാസ്, വാർഡ് 7' },
     visits: [
       {
-        date: '2026-09-09',
+        date: daysAgo(11),
         vitals: v('126', '82', '76', '98.0', '54', '98', '118'),
         symptoms: [],
         notes: {

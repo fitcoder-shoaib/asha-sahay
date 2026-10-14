@@ -28,9 +28,9 @@ export const tasks: Task[] = [
     who: { en: 'Sarasamma K, 64', hi: 'सरसम्मा के, 64', ml: 'സരസമ്മ കെ, 64' },
     where: { en: 'Thekkeveedu, Ward 7', hi: 'थेक्केवीडु, वार्ड 7', ml: 'തെക്കേവീട്, വാർഡ് 7' },
     detail: {
-      en: 'BP was 186/118 on 18 Sep and she was referred. Confirm she reached the PHC, take a fresh reading after 5 minutes rest, and check she has her amlodipine strip.',
-      hi: '18 सितंबर को बीपी 186/118 था और रेफर किया गया। पुष्टि करें कि वे पीएचसी पहुँचीं, 5 मिनट आराम के बाद दोबारा जाँचें, और एम्लोडिपिन की पत्ती देखें।',
-      ml: 'സെപ്റ്റംബർ 18ന് ബിപി 186/118 ആയിരുന്നു, റഫർ ചെയ്തു. പിഎച്ച്‌സിയിൽ എത്തിയോ എന്ന് ഉറപ്പാക്കുക, 5 മിനിറ്റ് വിശ്രമശേഷം വീണ്ടും പരിശോധിക്കുക, ആംലോഡിപ്പിൻ ഗുളിക ഉണ്ടോയെന്ന് നോക്കുക.',
+      en: 'BP was 186/118 at her last visit and she was referred. Confirm she reached the PHC, take a fresh reading after 5 minutes rest, and check she has her amlodipine strip.',
+      hi: 'पिछले भ्रमण में बीपी 186/118 था और रेफर किया गया। पुष्टि करें कि वे पीएचसी पहुँचीं, 5 मिनट आराम के बाद दोबारा जाँचें, और एम्लोडिपिन की पत्ती देखें।',
+      ml: 'കഴിഞ്ഞ സന്ദർശനത്തിൽ ബിപി 186/118 ആയിരുന്നു, റഫർ ചെയ്തു. പിഎച്ച്‌സിയിൽ എത്തിയോ എന്ന് ഉറപ്പാക്കുക, 5 മിനിറ്റ് വിശ്രമശേഷം വീണ്ടും പരിശോധിക്കുക, ആംലോഡിപ്പിൻ ഗുളിക ഉണ്ടോയെന്ന് നോക്കുക.',
     },
   },
   {
@@ -43,9 +43,9 @@ export const tasks: Task[] = [
     who: { en: 'Nabeesa Beevi, 29', hi: 'नबीसा बीवी, 29', ml: 'നബീസ ബീവി, 29' },
     where: { en: 'Puthanpurayil, Ward 8', hi: 'पुथनपुरयिल, वार्ड 8', ml: 'പുത്തൻപുരയിൽ, വാർഡ് 8' },
     detail: {
-      en: 'Weigh her, check BP and swelling in feet. Confirm IFA tablets are being taken daily and count the strip. Remind her of the scan appointment at the PHC on 24 Sep.',
-      hi: 'वज़न लें, बीपी और पैरों की सूजन देखें। आईएफए गोलियाँ प्रतिदिन ली जा रही हैं, पत्ती गिनें। 24 सितंबर को पीएचसी में स्कैन की याद दिलाएँ।',
-      ml: 'ഭാരം നോക്കുക, ബിപിയും കാലിലെ നീരും പരിശോധിക്കുക. ഐഎഫ്എ ഗുളിക ദിവസവും കഴിക്കുന്നുണ്ടോയെന്ന് ഉറപ്പാക്കി എണ്ണം നോക്കുക. സെപ്റ്റംബർ 24ലെ സ്കാൻ ഓർമ്മിപ്പിക്കുക.',
+      en: 'Weigh her, check BP and swelling in feet. Confirm IFA tablets are being taken daily and count the strip. Remind her of the scan appointment at the PHC later this week.',
+      hi: 'वज़न लें, बीपी और पैरों की सूजन देखें। आईएफए गोलियाँ प्रतिदिन ली जा रही हैं, पत्ती गिनें। इसी सप्ताह पीएचसी में होने वाले स्कैन की याद दिलाएँ।',
+      ml: 'ഭാരം നോക്കുക, ബിപിയും കാലിലെ നീരും പരിശോധിക്കുക. ഐഎഫ്എ ഗുളിക ദിവസവും കഴിക്കുന്നുണ്ടോയെന്ന് ഉറപ്പാക്കി എണ്ണം നോക്കുക. ഈ ആഴ്ച പിഎച്ച്‌സിയിലെ സ്കാൻ ഓർമ്മിപ്പിക്കുക.',
     },
   },
   {
@@ -88,9 +88,9 @@ export const tasks: Task[] = [
     who: { en: 'Raman Nair, 71', hi: 'रमन नायर, 71', ml: 'രാമൻ നായർ, 71' },
     where: { en: 'Nair Madom, Ward 7', hi: 'नायर मडोम, वार्ड 7', ml: 'നായർ മഠം, വാർഡ് 7' },
     detail: {
-      en: 'SpO2 was 91 and he was referred on 15 Sep. Check whether the family arranged transport. If he is still at home and breathless at rest, call the ambulance yourself.',
-      hi: '15 सितंबर को ऑक्सीजन 91 था और रेफर किया गया। देखें कि परिवार ने वाहन की व्यवस्था की या नहीं। यदि वे अब भी घर पर हैं और आराम में भी साँस फूल रही है, तो स्वयं एम्बुलेंस बुलाएँ।',
-      ml: 'സെപ്റ്റംബർ 15ന് ഓക്സിജൻ 91 ആയിരുന്നു, റഫർ ചെയ്തു. കുടുംബം വാഹനം ഒരുക്കിയോ എന്ന് നോക്കുക. ഇപ്പോഴും വീട്ടിലാണെങ്കിലും വിശ്രമത്തിലും ശ്വാസംമുട്ടലുണ്ടെങ്കിൽ സ്വയം ആംബുലൻസ് വിളിക്കുക.',
+      en: 'SpO2 was 91 and he was referred at the last visit. Check whether the family arranged transport. If he is still at home and breathless at rest, call the ambulance yourself.',
+      hi: 'पिछले भ्रमण में ऑक्सीजन 91 था और रेफर किया गया। देखें कि परिवार ने वाहन की व्यवस्था की या नहीं। यदि वे अब भी घर पर हैं और आराम में भी साँस फूल रही है, तो स्वयं एम्बुलेंस बुलाएँ।',
+      ml: 'കഴിഞ്ഞ സന്ദർശനത്തിൽ ഓക്സിജൻ 91 ആയിരുന്നു, റഫർ ചെയ്തു. കുടുംബം വാഹനം ഒരുക്കിയോ എന്ന് നോക്കുക. ഇപ്പോഴും വീട്ടിലാണെങ്കിലും വിശ്രമത്തിലും ശ്വാസംമുട്ടലുണ്ടെങ്കിൽ സ്വയം ആംബുലൻസ് വിളിക്കുക.',
     },
   },
   {

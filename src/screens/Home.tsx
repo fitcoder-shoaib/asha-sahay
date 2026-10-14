@@ -7,7 +7,7 @@ import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { profile } from '../data/profile'
-import { payments, sumBy } from '../data/payments'
+import { totalBy } from '../data/salary'
 import { patients, isUrgent } from '../data/patients'
 import { POINTS_BALANCE } from '../data/rewards'
 import { tasks } from '../data/tasks'
@@ -20,7 +20,9 @@ export default function Home() {
   const hour = new Date().getHours()
   const greeting = hour < 12 ? t.home.morning : hour < 17 ? t.home.afternoon : t.home.evening
 
-  const owed = sumBy(payments, 'pending') + sumBy(payments, 'process')
+  // Only what has not arrived. 'delayed' months were paid, just late, so
+  // counting them here would overstate what she is still owed.
+  const owed = totalBy('pending')
   const weekCutoff = new Date(TODAY)
   weekCutoff.setDate(TODAY.getDate() - 7)
   const visitsThisWeek = patients.filter(

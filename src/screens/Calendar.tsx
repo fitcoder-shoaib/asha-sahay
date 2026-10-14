@@ -1,122 +1,124 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  BadgeIndianRupee, CalendarClock, Check, ChevronLeft, ChevronRight, Clock, Hourglass,
+} from 'lucide-react'
 import AppHeader from '../components/AppHeader'
-import StatusChip from '../components/StatusChip'
 import { useT } from '../i18n'
-import { pick } from '../data/types'
 import {
-  payments, paymentsInMonth, sumBy, STATUS_ORDER, type PayStatus, type Payment,
-} from '../data/payments'
-import { salary, type SalaryStatus } from '../data/salary'
+  countBy, salary, salaryDueIn, salaryDueOn, totalBy,
+  type SalaryMonth, type SalaryStatus,
+} from '../data/salary'
 import {
-  TODAY, dayLabel, fromIso, iso, monthGrid, monthLabel, rupees, sameDay, weekdayInitials,
+  TODAY, dayLabel, fromIso, fullDate, iso, monthGrid, monthLabel, rupees, sameDay,
+  shortMonth, weekdayInitials,
 } from '../lib/date'
 
-type Filter = 'all' | PayStatus
-
-const LOCALE = { en: 'en-IN', hi: 'hi-IN', ml: 'ml-IN' } as const
+const STATUS_ORDER: SalaryStatus[] = ['paid', 'delayed', 'pending']
 
 function salaryLabel(s: SalaryStatus, t: ReturnType<typeof useT>['t']) {
-  return { paid: t.calendar.salaryPaid, pending: t.calendar.salaryPending, delayed: t.calendar.salaryDelayed }[s]
+  return {
+    paid: t.calendar.salaryPaid,
+    pending: t.calendar.salaryPending,
+    delayed: t.calendar.salaryDelayed,
+  }[s]
 }
 
 export default function Calendar() {
   const { t, lang } = useT()
   const [cursor, setCursor] = useState(new Date(TODAY.getFullYear(), TODAY.getMonth(), 1))
   const [selected, setSelected] = useState<string | null>(null)
-  const [filter, setFilter] = useState<Filter>('all')
-  const [openId, setOpenId] = useState<string | null>(null)
 
-  // Keep the month being viewed visible in the salary strip.
+  // Keep the month being viewed centred in the salary strip. Done by setting
+  // scrollLeft rather than scrollIntoView: that also scrolls ancestors, and it
+  // lands short when it runs before web fonts have settled the strip's width.
   const salaryRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    salaryRef.current
-      ?.querySelector('.cal__salaryItem--on')
-      ?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+    const centre = () => {
+      const strip = salaryRef.current
+      const on = strip?.querySelector<HTMLElement>('.cal__salaryItem--on')
+      if (!strip || !on) return
+      const target = on.offsetLeft - strip.clientWidth / 2 + on.offsetWidth / 2
+      const max = strip.scrollWidth - strip.clientWidth
+      strip.scrollTo({ left: Math.min(Math.max(0, target), max), behavior: 'smooth' })
+    }
+
+    const id = setTimeout(centre, 0)
+    // Font loading changes the chip widths, so re-centre once that settles.
+    document.fonts?.ready.then(centre).catch(() => {})
+    return () => clearTimeout(id)
   }, [cursor])
 
   const grid = useMemo(() => monthGrid(cursor.getFullYear(), cursor.getMonth()), [cursor])
-  const monthPayments = useMemo(
-    () => paymentsInMonth(cursor.getFullYear(), cursor.getMonth()),
-    [cursor],
-  )
 
-  // Dots per day, built in a stable status order so colours never reshuffle.
+  /**
+   * Salary lands on the 1st of the month, so the calendar marks due dates —
+   * one dot per month, coloured by whether that salary actually arrived.
+   */
   const byDay = useMemo(() => {
-    const map = new Map<string, PayStatus[]>()
+    const map = new Map<string, SalaryStatus[]>()
     for (const s of STATUS_ORDER) {
-      for (const x of payments) {
-        if (x.status !== s) continue
-        const cur = map.get(x.date) ?? []
+      for (const row of salary) {
+        if (row.status !== s) continue
+        const cur = map.get(row.dueOn) ?? []
         if (!cur.includes(s)) cur.push(s)
-        map.set(x.date, cur)
+        map.set(row.dueOn, cur)
       }
     }
     return map
   }, [])
 
-  const totals = {
-    received: sumBy(monthPayments, 'received'),
-    pending: sumBy(monthPayments, 'pending'),
-    process: sumBy(monthPayments, 'process'),
-  }
-
+  // Rows whose credit was due in the month on screen (or on the chosen day).
   const listed = useMemo(() => {
-    const base = selected ? payments.filter((x) => x.date === selected) : monthPayments
-    const out = filter === 'all' ? base : base.filter((x) => x.status === filter)
-    return [...out].sort((a, b) => a.date.localeCompare(b.date))
-  }, [selected, monthPayments, filter])
+    const base = selected
+      ? salaryDueOn(selected)
+      : salaryDueIn(cursor.getFullYear(), cursor.getMonth())
+    return [...base].sort((a, b) => b.month.localeCompare(a.month))
+  }, [selected, cursor])
 
   const shiftMonth = (by: number) => {
     setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + by, 1))
     setSelected(null)
   }
 
-  const filters: { key: Filter; label: string }[] = [
-    { key: 'all', label: t.common.all },
-    { key: 'received', label: t.calendar.received },
-    { key: 'pending', label: t.calendar.pending },
-    { key: 'process', label: t.calendar.inProcess },
-  ]
-
   return (
     <div className="screen">
-      <AppHeader
-        title={t.calendar.title}
-        subtitle={monthLabel(cursor, lang)}
-      />
+      <AppHeader title={t.calendar.title} subtitle={monthLabel(cursor, lang)} />
 
       <div className="cal">
         {/* ---------- upper half: the calendar ---------- */}
         <section className="cal__top">
+          {/* lifetime salary position, so the record is visible at a glance */}
           <div className="cal__totals">
-            <Total label={t.calendar.received} value={totals.received} tone="received" />
-            <Total label={t.calendar.pending} value={totals.pending} tone="pending" />
-            <Total label={t.calendar.inProcess} value={totals.process} tone="process" />
+            <Total label={t.calendar.salaryPaid} value={totalBy('paid')} n={countBy('paid')} tone="paid" />
+            <Total label={t.calendar.salaryDelayed} value={totalBy('delayed')} n={countBy('delayed')} tone="delayed" />
+            <Total label={t.calendar.salaryPending} value={totalBy('pending')} n={countBy('pending')} tone="pending" />
           </div>
 
-          {/* month navigation and salary status share one row: the calendar's
-              upper half is a fixed 50%, so every row here costs the grid. */}
+          {/* month navigation and salary status share one row: the upper half is
+              a fixed 50%, so every extra row is stolen from the grid */}
           <div className="cal__months">
-            <button className="cal__navBtn" onClick={() => shiftMonth(-1)} aria-label="Previous month">
+            <button className="cal__navBtn" onClick={() => shiftMonth(-1)} aria-label={t.common.back}>
               <ChevronLeft size={19} />
             </button>
 
             <div className="cal__salary" ref={salaryRef}>
               {salary.map((m) => {
                 const [y, mo] = m.month.split('-').map(Number)
-                const on = cursor.getFullYear() === y && cursor.getMonth() === mo - 1
+                // The chip is labelled with the month earned, but selects the
+                // month it lands in — otherwise tapping "Aug" would list July.
+                const [dy, dm] = m.dueOn.split('-').map(Number)
+                const on = cursor.getFullYear() === dy && cursor.getMonth() === dm - 1
                 return (
                   <button
                     key={m.month}
                     className={`cal__salaryItem cal__salaryItem--${m.status} ${on ? 'cal__salaryItem--on' : ''}`}
                     onClick={() => {
-                      setCursor(new Date(y, mo - 1, 1))
+                      setCursor(new Date(dy, dm - 1, 1))
                       setSelected(null)
                     }}
                   >
                     <span className="cal__salaryMonth">
-                      {fromIso(`${m.month}-01`).toLocaleDateString(LOCALE[lang], { month: 'short' })}
+                      {shortMonth(new Date(y, mo - 1, 1), lang)}
                     </span>
                     <span className="cal__salaryState">{salaryLabel(m.status, t)}</span>
                   </button>
@@ -124,7 +126,7 @@ export default function Calendar() {
               })}
             </div>
 
-            <button className="cal__navBtn" onClick={() => shiftMonth(1)} aria-label="Next month">
+            <button className="cal__navBtn" onClick={() => shiftMonth(1)} aria-label={t.common.next}>
               <ChevronRight size={19} />
             </button>
           </div>
@@ -163,50 +165,28 @@ export default function Calendar() {
           </div>
         </section>
 
-        {/* ---------- lower half: the written list ---------- */}
+        {/* ---------- lower half: the written record ---------- */}
         <section className="cal__bottom">
           <div className="cal__listHead">
             <h2 className="cal__listTitle">
-              {t.calendar.entriesFor}{' '}
+              {t.calendar.creditedIn}{' '}
               <span className="cal__listWhen">
-                {selected ? dayLabel(fromIso(selected), lang) : t.calendar.wholeMonth}
+                {selected ? dayLabel(fromIso(selected), lang) : monthLabel(cursor, lang)}
               </span>
             </h2>
             <span className="cal__listCount">{listed.length}</span>
           </div>
 
-          <div className="cal__filters">
-            {filters.map((f) => (
-              <button
-                key={f.key}
-                className={`cal__filter ${filter === f.key ? 'cal__filter--on' : ''}`}
-                onClick={() => setFilter(f.key)}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-
           <div className="scroll cal__list">
             {listed.length === 0 ? (
               <p className="cal__empty">
-                {filter !== 'all'
-                  ? t.calendar.noneForFilter
-                  : selected
-                    ? t.calendar.noneForDay
-                    : t.calendar.noneForMonth}
+                {selected ? t.calendar.noneForDay : t.calendar.noneForMonth}
               </p>
             ) : (
-              listed.map((x) => (
-                <PayRow
-                  key={x.id}
-                  item={x}
-                  open={openId === x.id}
-                  onToggle={() => setOpenId(openId === x.id ? null : x.id)}
-                  showDate={!selected}
-                />
-              ))
+              listed.map((row) => <SalaryRow key={row.month} row={row} />)
             )}
+
+            <p className="cal__note">{t.calendar.transparencyNote}</p>
           </div>
         </section>
       </div>
@@ -214,45 +194,82 @@ export default function Calendar() {
   )
 }
 
-function Total({ label, value, tone }: { label: string; value: number; tone: string }) {
+function Total({
+  label, value, n, tone,
+}: { label: string; value: number; n: number; tone: string }) {
   return (
     <div className={`cal__total cal__total--${tone}`}>
-      <span className="cal__totalLabel">{label}</span>
+      <span className="cal__totalLabel">
+        {label} · {n}
+      </span>
       <span className="cal__totalValue">{rupees(value)}</span>
     </div>
   )
 }
 
-function PayRow({
-  item,
-  open,
-  onToggle,
-  showDate,
-}: {
-  item: Payment
-  open: boolean
-  onToggle: () => void
-  showDate: boolean
-}) {
+function SalaryRow({ row }: { row: SalaryMonth }) {
   const { t, lang } = useT()
+  const [y, m] = row.month.split('-').map(Number)
+  const forMonth = new Date(y, m - 1, 1)
+
+  const icon = {
+    paid: <Check size={15} strokeWidth={3} />,
+    delayed: <Clock size={15} />,
+    pending: <Hourglass size={15} />,
+  }[row.status]
+
   return (
-    <button className="pay" onClick={onToggle}>
-      <span className={`pay__bar pay__bar--${item.status}`} />
-      <span className="pay__body">
-        <span className="pay__top">
-          <span className="pay__name">{pick(item.scheme, lang)}</span>
-          <span className="pay__amt">{rupees(item.amount)}</span>
+    <article className={`sal sal--${row.status}`}>
+      <div className="sal__head">
+        <span className="sal__icon">{icon}</span>
+        <div className="col" style={{ flex: 1, minWidth: 0 }}>
+          <span className="sal__month">{monthLabel(forMonth, lang)}</span>
+          <span className="sal__state">{salaryLabel(row.status, t)}</span>
+        </div>
+        <span className="sal__amount">
+          <BadgeIndianRupee size={15} />
+          {row.amount.toLocaleString('en-IN')}
         </span>
-        <span className="pay__meta">
-          <StatusChip status={item.status} />
-          {showDate && <span className="pay__date">{dayLabel(fromIso(item.date), lang)}</span>}
-        </span>
-        {open && (
-          <span className="pay__detail fade-in">
-            {item.units} {t.calendar.units} {t.calendar.rate} {rupees(item.rate)}
-          </span>
+      </div>
+
+      <dl className="sal__rows">
+        <div>
+          <dt><CalendarClock size={12} /> {t.calendar.dueOn}</dt>
+          <dd>{fullDate(fromIso(row.dueOn), lang)}</dd>
+        </div>
+
+        {row.creditedOn && (
+          <div>
+            <dt><Check size={12} /> {t.calendar.creditedOn}</dt>
+            <dd>{fullDate(fromIso(row.creditedOn), lang)}</dd>
+          </div>
         )}
-      </span>
-    </button>
+
+        {row.status === 'delayed' && row.lateBy !== undefined && (
+          <div>
+            <dt><Clock size={12} /> {t.calendar.lateBy}</dt>
+            <dd className="sal__late">
+              {row.lateBy} {t.calendar.salaryDays}
+            </dd>
+          </div>
+        )}
+
+        {row.status === 'pending' && (
+          <div>
+            <dt><Hourglass size={12} /> {t.calendar.awaiting}</dt>
+            <dd>{t.calendar.awaitingSub}</dd>
+          </div>
+        )}
+
+        {row.status === 'pending' && row.lateBy !== undefined && (
+          <div>
+            <dt><Clock size={12} /> {t.calendar.overdueBy}</dt>
+            <dd className="sal__late">
+              {row.lateBy} {t.calendar.salaryDays}
+            </dd>
+          </div>
+        )}
+      </dl>
+    </article>
   )
 }

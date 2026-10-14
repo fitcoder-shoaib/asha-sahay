@@ -2,8 +2,14 @@ import type { Lang } from '../i18n'
 
 const LOCALE: Record<Lang, string> = { en: 'en-IN', hi: 'hi-IN', ml: 'ml-IN' }
 
-/** The app's "today". Fixed so the seeded demo data always lines up. */
-export const TODAY = new Date(2026, 8, 20) // 20 Sep 2026
+/**
+ * The app's "today" — the real current date, read once per load. All seeded
+ * data is expressed as offsets from this, so the demo never goes stale.
+ */
+export const TODAY = (() => {
+  const n = new Date()
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate())
+})()
 
 export const iso = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -12,6 +18,25 @@ export const fromIso = (s: string) => {
   const [y, m, d] = s.split('-').map(Number)
   return new Date(y, m - 1, d)
 }
+
+/** ISO date n days before today. */
+export const daysAgo = (n: number) => {
+  const d = new Date(TODAY)
+  d.setDate(TODAY.getDate() - n)
+  return iso(d)
+}
+
+/** First day of the month, n months from the current one (negative = past). */
+export const monthStart = (offset = 0) =>
+  new Date(TODAY.getFullYear(), TODAY.getMonth() + offset, 1)
+
+/** YYYY-MM key for a date. */
+export const monthKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+
+/** Short month name in the active language, e.g. "Oct". */
+export const shortMonth = (d: Date, lang: Lang) =>
+  d.toLocaleDateString(LOCALE[lang], { month: 'short' })
 
 export const sameDay = (a: Date, b: Date) =>
   a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()

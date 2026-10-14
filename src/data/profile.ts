@@ -82,14 +82,8 @@ export const profile = {
 
   ncd: {
     total: 1348,
-    byMonth: [
-      { month: { en: 'Apr', hi: 'अप्रैल', ml: 'ഏപ്രിൽ' }, count: 38 },
-      { month: { en: 'May', hi: 'मई', ml: 'മെയ്' }, count: 52 },
-      { month: { en: 'Jun', hi: 'जून', ml: 'ജൂൺ' }, count: 46 },
-      { month: { en: 'Jul', hi: 'जुलाई', ml: 'ജൂലൈ' }, count: 61 },
-      { month: { en: 'Aug', hi: 'अगस्त', ml: 'ഓഗസ്റ്റ്' }, count: 57 },
-      { month: { en: 'Sep', hi: 'सितंबर', ml: 'സെപ്റ്റംബർ' }, count: 34 },
-    ] as { month: L; count: number }[],
+    /** Last six months, oldest first. Labels come from the live calendar. */
+    byMonth: [38, 52, 46, 61, 57, 34],
   },
 
   achievements: [

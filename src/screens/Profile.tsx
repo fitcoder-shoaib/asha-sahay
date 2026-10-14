@@ -8,13 +8,13 @@ import AppHeader from '../components/AppHeader'
 import { LANGS, useT } from '../i18n'
 import { pick } from '../data/types'
 import { profile } from '../data/profile'
-import { fromIso, fullDate, yearsSince } from '../lib/date'
+import { fromIso, fullDate, monthStart, shortMonth, yearsSince } from '../lib/date'
 
 export default function Profile() {
   const { t, lang, setLang } = useT()
   const [trainingsOpen, setTrainingsOpen] = useState(false)
   const years = yearsSince(profile.joiningDate)
-  const maxNcd = Math.max(...profile.ncd.byMonth.map((m) => m.count))
+  const maxNcd = Math.max(...profile.ncd.byMonth)
 
   const monthName = (ym: string) =>
     fromIso(`${ym}-01`).toLocaleDateString(lang === 'en' ? 'en-IN' : lang === 'hi' ? 'hi-IN' : 'ml-IN', {
@@ -173,11 +173,13 @@ export default function Profile() {
             <span className="ncd__total">{profile.ncd.total.toLocaleString('en-IN')}</span>
           </div>
           <div className="ncd__chart">
-            {profile.ncd.byMonth.map((m, i) => (
+            {profile.ncd.byMonth.map((count, i) => (
               <div key={i} className="ncd__col">
-                <span className="ncd__count">{m.count}</span>
-                <span className="ncd__bar" style={{ height: `${(m.count / maxNcd) * 100}%` }} />
-                <span className="ncd__month">{pick(m.month, lang)}</span>
+                <span className="ncd__count">{count}</span>
+                <span className="ncd__bar" style={{ height: `${(count / maxNcd) * 100}%` }} />
+                <span className="ncd__month">
+                  {shortMonth(monthStart(i - (profile.ncd.byMonth.length - 1)), lang)}
+                </span>
               </div>
             ))}
           </div>
