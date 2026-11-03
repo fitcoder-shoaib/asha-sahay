@@ -16,6 +16,12 @@ type Props = {
  * Numeric vital with live triage colouring. The colour is advisory — it never
  * blocks entry, because a worker may well be recording an unusual-but-correct value.
  */
+/** Digits and at most one decimal point, so every saved value is a real number. */
+const cleanNumber = (raw: string) => {
+  const [whole, ...rest] = raw.replace(/[^\d.]/g, '').split('.')
+  return rest.length ? `${whole}.${rest.join('')}` : whole
+}
+
 export default function VitalField({
   vkey, label, unit, value, onChange, placeholder, missing = false,
 }: Props) {
@@ -39,7 +45,7 @@ export default function VitalField({
           inputMode="decimal"
           value={value}
           placeholder={placeholder ?? '—'}
-          onChange={(e) => onChange(e.target.value.replace(/[^\d.]/g, ''))}
+          onChange={(e) => onChange(cleanNumber(e.target.value))}
         />
         <span className="vf__unit">{unit}</span>
       </span>

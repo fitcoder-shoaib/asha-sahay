@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { useSession } from '../session'
 import { Check, ChevronRight, Info, X } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
@@ -9,6 +10,7 @@ import { todaysQuestions } from '../data/quiz'
 export default function QuizPlay() {
   const { t, lang } = useT()
   const navigate = useNavigate()
+  const { quizScore, finishQuiz } = useSession()
 
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState<number | null>(null)
@@ -27,12 +29,16 @@ export default function QuizPlay() {
 
   const next = () => {
     if (isLast) {
-      navigate('/quiz/result', { state: { score: score } })
+      finishQuiz(score)
+      navigate('/quiz/result', { replace: true })
       return
     }
     setIndex(index + 1)
     setPicked(null)
   }
+
+  // One attempt a day: once played, the quiz opens on the result.
+  if (quizScore !== null && index === 0 && picked === null) return <Navigate to="/quiz/result" replace />
 
   return (
     <div className="screen">

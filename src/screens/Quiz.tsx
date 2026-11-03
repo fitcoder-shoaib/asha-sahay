@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom'
-import { BrainCircuit, ChevronRight, Coins, Flame, Gift, ListChecks, Play } from 'lucide-react'
+import { BrainCircuit, Check, ChevronRight, Coins, Flame, Gift, ListChecks, Play } from 'lucide-react'
+import { useSession } from '../session'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { STREAK, todaysQuestions } from '../data/quiz'
-import { POINTS_BALANCE, POINTS_LIFETIME, POINTS_PER_RUPEE } from '../data/rewards'
+import { POINTS_PER_RUPEE } from '../data/rewards'
 import { TODAY, fullDate, rupees } from '../lib/date'
 
 export default function Quiz() {
   const { t, lang } = useT()
+  const { points, pointsLifetime, quizScore } = useSession()
+  const played = quizScore !== null
 
   // Distinct topics covered today, shown as a teaser.
   const topics = Array.from(new Set(todaysQuestions.map((q) => pick(q.topic, lang))))
@@ -25,12 +28,12 @@ export default function Quiz() {
             <div className="col" style={{ flex: 1, minWidth: 0 }}>
               <span className="pts__label">{t.quiz.pointsBalance}</span>
               <span className="pts__value">
-                {POINTS_BALANCE.toLocaleString('en-IN')} <i>{t.quiz.pts}</i>
+                {points.toLocaleString('en-IN')} <i>{t.quiz.pts}</i>
               </span>
             </div>
             <div className="col pts__worth">
               <span className="pts__worthValue">
-                {rupees(Math.floor(POINTS_BALANCE / POINTS_PER_RUPEE))}
+                {rupees(Math.floor(points / POINTS_PER_RUPEE))}
               </span>
               <span className="pts__worthLabel">{t.quiz.earnedSoFar}</span>
             </div>
@@ -50,13 +53,19 @@ export default function Quiz() {
 
           <div className="quizCard__streak">
             <Flame size={17} />
-            <span className="quizCard__streakNum">{STREAK}</span>
+            <span className="quizCard__streakNum">{played ? STREAK + 1 : STREAK}</span>
             <span className="quizCard__streakLabel">{t.quiz.streak}</span>
           </div>
 
-          <Link to="/quiz/play" className="btn btn--block quizCard__start">
-            <Play size={18} /> {t.quiz.start}
-          </Link>
+          {played ? (
+            <Link to="/quiz/result" className="btn btn--block quizCard__start">
+              <Check size={18} strokeWidth={3} /> {t.quiz.yourScore}: {quizScore} / {todaysQuestions.length}
+            </Link>
+          ) : (
+            <Link to="/quiz/play" className="btn btn--block quizCard__start">
+              <Play size={18} /> {t.quiz.start}
+            </Link>
+          )}
         </section>
 
         <h3 className="section-title" style={{ marginTop: 20 }}>
@@ -70,7 +79,7 @@ export default function Quiz() {
         </div>
 
         <p className="pts__lifetime">
-          {t.quiz.myPoints}: {POINTS_LIFETIME.toLocaleString('en-IN')} {t.quiz.pts}
+          {t.quiz.myPoints}: {pointsLifetime.toLocaleString('en-IN')} {t.quiz.pts}
         </p>
       </div>
     </div>

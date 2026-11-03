@@ -7,7 +7,8 @@ import { TODAY, iso, monthKey, monthStart } from '../lib/date'
  * new month opens with the previous month's update. Generated relative to the
  * real date rather than hard-coded, so the view never goes stale.
  */
-export type SalaryStatus = 'paid' | 'pending' | 'delayed'
+/** 'upcoming': the month isn't over yet, so its salary isn't due — nothing is wrong. */
+export type SalaryStatus = 'paid' | 'pending' | 'delayed' | 'upcoming'
 
 export type SalaryMonth = {
   /** YYYY-MM the salary is FOR. */
@@ -53,7 +54,7 @@ function build(): SalaryMonth[] {
 
     // Nothing can be credited before its due date.
     if (due > TODAY) {
-      out.push({ month: key, amount: AMOUNT, status: 'pending', dueOn })
+      out.push({ month: key, amount: AMOUNT, status: 'upcoming', dueOn })
       continue
     }
 

@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import logoMark from '../assets/logo-mark.png'
+import logoName from '../assets/logo-name.png'
+import logoSlogan from '../assets/logo-slogan.png'
 
 const SHOW_MS = 3200
 const FADE_MS = 450
@@ -34,11 +37,11 @@ export default function Splash() {
     >
       <div className="splash__stage">
         <div className="splash__sun" />
-        <img className="splash__mark" src="/logo-mark.png" alt="ASHA Sahay" draggable={false} />
+        <img className="splash__mark" src={logoMark} alt="ASHA Sahay" draggable={false} />
       </div>
       <div className="splash__text">
-        <img className="splash__name" src="/logo-name.png" alt="" draggable={false} />
-        <img className="splash__slogan" src="/logo-slogan.png" alt="" draggable={false} />
+        <img className="splash__name" src={logoName} alt="" draggable={false} />
+        <img className="splash__slogan" src={logoSlogan} alt="" draggable={false} />
       </div>
       <div className="splash__dots">
         <span /><span /><span />

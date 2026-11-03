@@ -54,6 +54,7 @@ const en = {
     priority: 'Priority',
     allDone: 'Everything done for today',
     remaining: 'tasks left today',
+    remainingOne: 'task left today',
     openAll: 'View all tasks',
   },
 
@@ -93,6 +94,7 @@ const en = {
     myId: 'My digital ID',
     urgentTitle: 'Needs urgent follow-up',
     urgentBody: 'patients flagged for referral',
+    urgentBodyOne: 'patient flagged for referral',
   },
 
   calendar: {
@@ -114,6 +116,8 @@ const en = {
     salaryPaid: 'Paid',
     salaryPending: 'Pending',
     salaryDelayed: 'Delayed',
+    salaryUpcoming: 'Not due yet',
+    upcomingSub: 'Expected on the due date',
     salaryDelayedBy: 'delayed',
     salaryDays: 'days',
   },
@@ -183,7 +187,7 @@ const en = {
     myPoints: 'My points',
     pointsBalance: 'Points balance',
     pts: 'pts',
-    earnedSoFar: 'Earned from quizzes so far',
+    earnedSoFar: 'Cash value',
     redeemCta: 'Redeem points for cash',
   },
 
@@ -233,6 +237,7 @@ const en = {
     logoutQ: 'Log out of ASHA Sahay?',
     logoutSub: 'You will need your ASHA ID to sign back in.',
     demoNote: 'Settings are shown for demonstration and are not saved.',
+    comingSoon: 'Available in the full app',
   },
 
   visits: {
@@ -285,6 +290,8 @@ const en = {
     summary: 'Visit summary',
     saveVisit: 'Save visit',
     updateVisit: 'Update visit',
+    visitSaved: 'Visit saved',
+    visitUpdated: 'Visit updated',
     normal: 'Normal', elevated: 'Elevated', high: 'High', low: 'Low',
     visitHistory: 'Visit history',
     noVitals: 'No vitals recorded',

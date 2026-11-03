@@ -24,6 +24,10 @@ export default function Settings() {
   const [appLock, setAppLock] = useState(false)
   const [dataSharing, setDataSharing] = useState(true)
   const [confirmLogout, setConfirmLogout] = useState(false)
+  /** Which not-yet-built row was tapped, so it can say so instead of doing nothing. */
+  const [soon, setSoon] = useState<string | null>(null)
+  const soonNote = (key: string) =>
+    soon === key ? <p className="set__soon fade-in">{t.settings.comingSoon}</p> : null
 
   return (
     <div className="screen">
@@ -73,16 +77,20 @@ export default function Settings() {
               </span>
             </div>
           </div>
-          <button className="btn btn--ghost btn--block" style={{ minHeight: 42 }}>
+          <button className="btn btn--ghost btn--block" style={{ minHeight: 42 }} onClick={() => setSoon('contact')}>
             {t.settings.changeContact}
           </button>
+          {soonNote('contact')}
         </Section>
 
         {/* help */}
         <Section icon={<HelpCircle size={17} />} title={t.settings.help} sub={t.settings.helpSub}>
-          <LinkRow icon={<LifeBuoy size={17} />} label={t.settings.userGuide} />
-          <LinkRow icon={<Phone size={17} />} label={t.settings.contactSupport} />
-          <LinkRow icon={<Info size={17} />} label={t.settings.about} />
+          <LinkRow icon={<LifeBuoy size={17} />} label={t.settings.userGuide} onClick={() => setSoon('guide')} />
+          {soonNote('guide')}
+          <LinkRow icon={<Phone size={17} />} label={t.settings.contactSupport} onClick={() => setSoon('support')} />
+          {soonNote('support')}
+          <LinkRow icon={<Info size={17} />} label={t.settings.about} onClick={() => setSoon('about')} />
+          {soonNote('about')}
           <p className="set__version">
             {t.settings.version} {APP_VERSION}
           </p>
@@ -160,9 +168,11 @@ function Toggle({
   )
 }
 
-function LinkRow({ icon, label }: { icon: React.ReactNode; label: string }) {
+function LinkRow({
+  icon, label, onClick,
+}: { icon: React.ReactNode; label: string; onClick: () => void }) {
   return (
-    <button className="set__link">
+    <button className="set__link" onClick={onClick}>
       <span className="set__linkIcon">{icon}</span>
       <span className="set__linkLabel">{label}</span>
       <ChevronRight size={17} className="faint" />

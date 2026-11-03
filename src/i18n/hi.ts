@@ -56,6 +56,7 @@ const hi: Dict = {
     priority: 'प्राथमिकता',
     allDone: 'आज के सभी कार्य पूर्ण',
     remaining: 'कार्य आज शेष',
+    remainingOne: 'कार्य आज शेष',
     openAll: 'सभी कार्य देखें',
   },
 
@@ -95,6 +96,7 @@ const hi: Dict = {
     myId: 'मेरा डिजिटल पहचान पत्र',
     urgentTitle: 'तत्काल फ़ॉलो-अप आवश्यक',
     urgentBody: 'रोगी रेफरल के लिए चिह्नित',
+    urgentBodyOne: 'रोगी रेफरल के लिए चिह्नित',
   },
 
   calendar: {
@@ -116,6 +118,8 @@ const hi: Dict = {
     salaryPaid: 'भुगतान हुआ',
     salaryPending: 'लंबित',
     salaryDelayed: 'विलंबित',
+    salaryUpcoming: 'अभी देय नहीं',
+    upcomingSub: 'देय तिथि पर अपेक्षित',
     salaryDelayedBy: 'विलंब',
     salaryDays: 'दिन',
   },
@@ -185,7 +189,7 @@ const hi: Dict = {
     myPoints: 'मेरे अंक',
     pointsBalance: 'अंक शेष',
     pts: 'अंक',
-    earnedSoFar: 'अब तक क्विज़ से अर्जित',
+    earnedSoFar: 'नकद मूल्य',
     redeemCta: 'अंक भुनाकर नकद पाएँ',
   },
 
@@ -208,6 +212,7 @@ const hi: Dict = {
   },
 
   settings: {
+    comingSoon: 'पूर्ण ऐप में उपलब्ध',
     title: 'सेटिंग',
     language: 'भाषा',
     languageSub: 'ऐप की प्रदर्शन भाषा',
@@ -287,6 +292,8 @@ const hi: Dict = {
     summary: 'भ्रमण सारांश',
     saveVisit: 'भ्रमण सहेजें',
     updateVisit: 'भ्रमण अद्यतन करें',
+    visitSaved: 'भ्रमण सहेजा गया',
+    visitUpdated: 'भ्रमण अद्यतन हुआ',
     normal: 'सामान्य', elevated: 'बढ़ा हुआ', high: 'उच्च', low: 'कम',
     visitHistory: 'भ्रमण इतिहास',
     noVitals: 'कोई जाँच दर्ज नहीं',

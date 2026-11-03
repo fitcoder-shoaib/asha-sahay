@@ -651,6 +651,7 @@
 .cal__dot--paid    { background: var(--received); }
 .cal__dot--delayed { background: var(--urgent); }
 .cal__dot--pending { background: var(--pending); }
+.cal__dot--upcoming { background: var(--muted); }
 
 .sal {
   background: var(--surface);
@@ -662,6 +663,7 @@
 .sal--paid    { border-left-color: var(--received); }
 .sal--delayed { border-left-color: var(--urgent); }
 .sal--pending { border-left-color: var(--pending); }
+.sal--upcoming { border-left-color: var(--muted); }
 
 .sal__head { display: flex; align-items: center; gap: 10px; }
 .sal__icon {
@@ -799,3 +801,11 @@
   overflow-wrap: anywhere;
 }
 .cal__legend .cal__dot { flex: none; }
+
+/* settings: a row that is not built yet says so instead of doing nothing */
+.set__soon {
+  margin: 4px 0 6px;
+  font-size: 12px; font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+}

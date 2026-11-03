@@ -2,20 +2,17 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BadgeIndianRupee, Check, Coins, Landmark } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
+import { useSession } from '../session'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
-import {
-  POINTS_BALANCE, POINTS_PER_RUPEE, costOf, redemptions, rewardLabel, rewards,
-} from '../data/rewards'
+import { POINTS_PER_RUPEE, costOf, rewardLabel, rewards } from '../data/rewards'
 import { fromIso, fullDate, rupees } from '../lib/date'
 
 export default function Redeem() {
   const { t, lang } = useT()
   const navigate = useNavigate()
+  const { points: balance, redemptions, redeem } = useSession()
   const [claimed, setClaimed] = useState<number | null>(null)
-
-  // Spending is local to the screen — the seeded balance is never mutated.
-  const balance = claimed === null ? POINTS_BALANCE : POINTS_BALANCE - claimed * POINTS_PER_RUPEE
 
   if (claimed !== null) {
     return (
@@ -72,7 +69,10 @@ export default function Redeem() {
                 key={r.id}
                 className={`rdm__opt ${affordable ? '' : 'rdm__opt--off'}`}
                 disabled={!affordable}
-                onClick={() => setClaimed(r.rupees)}
+                onClick={() => {
+                  redeem(r.rupees)
+                  setClaimed(r.rupees)
+                }}
               >
                 <span className="rdm__optAmt">
                   <BadgeIndianRupee size={17} />

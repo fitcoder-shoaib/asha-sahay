@@ -5,7 +5,7 @@ import {
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import {
-  countBy, salary, totalBy, type SalaryMonth, type SalaryStatus,
+  countBy, salary, salaryDueIn, totalBy, type SalaryMonth, type SalaryStatus,
 } from '../data/salary'
 import {
   TODAY, dayLabel, fromIso, fullDate, fullDateTime, iso, monthGrid, monthLabel,
@@ -20,6 +20,7 @@ function salaryLabel(s: SalaryStatus, t: ReturnType<typeof useT>['t']) {
     paid: t.calendar.salaryPaid,
     pending: t.calendar.salaryPending,
     delayed: t.calendar.salaryDelayed,
+    upcoming: t.calendar.salaryUpcoming,
   }[s]
 }
 
@@ -56,13 +57,10 @@ export default function Calendar() {
   }, [])
 
   const listed = useMemo(() => {
-    const inMonth = (d: string) => {
-      const [y, m] = d.split('-').map(Number)
-      return y === cursor.getFullYear() && m - 1 === cursor.getMonth()
-    }
+    // A month shows the salary paid in it, so the card matches the dots above.
     const rows = selected
       ? salary.filter((r) => touches(r).includes(selected))
-      : salary.filter((r) => touches(r).some(inMonth))
+      : salaryDueIn(cursor.getFullYear(), cursor.getMonth())
     return [...rows].sort((a, b) => b.month.localeCompare(a.month))
   }, [cursor, selected])
 
@@ -148,7 +146,10 @@ export default function Calendar() {
           </div>
 
           <div className="cal__legend">
-            <span><i className="cal__dot cal__dot--pending" /> {t.calendar.legendDue}</span>
+            <span>
+              <i className={`cal__dot cal__dot--${listed[0]?.status ?? 'pending'}`} />
+              {t.calendar.legendDue}
+            </span>
             <span><i className="cal__dot cal__dot--credited" /> {t.calendar.legendCredited}</span>
           </div>
 
@@ -184,12 +185,14 @@ function Total({
 
 function SalaryRow({ row }: { row: SalaryMonth }) {
   const { t, lang } = useT()
-  const [y, m] = row.month.split('-').map(Number)
+  // Titled by the month it is paid in — the month the calendar is showing.
+  const due = fromIso(row.dueOn)
 
   const icon = {
     paid: <Check size={15} strokeWidth={3} />,
     delayed: <Clock size={15} />,
     pending: <Hourglass size={15} />,
+    upcoming: <CalendarClock size={15} />,
   }[row.status]
 
   return (
@@ -197,7 +200,7 @@ function SalaryRow({ row }: { row: SalaryMonth }) {
       <div className="sal__head">
         <span className="sal__icon">{icon}</span>
         <div className="col" style={{ flex: 1, minWidth: 0 }}>
-          <span className="sal__month">{monthLabel(new Date(y, m - 1, 1), lang)}</span>
+          <span className="sal__month">{monthLabel(due, lang)}</span>
           <span className="sal__state">{salaryLabel(row.status, t)}</span>
         </div>
         <span className="sal__amount">
@@ -229,6 +232,13 @@ function SalaryRow({ row }: { row: SalaryMonth }) {
             <dd className="sal__late">
               {row.lateBy} {t.calendar.salaryDays}
             </dd>
+          </div>
+        )}
+
+        {row.status === 'upcoming' && (
+          <div>
+            <dt><CalendarClock size={12} /> {t.calendar.salaryUpcoming}</dt>
+            <dd>{t.calendar.upcomingSub}</dd>
           </div>
         )}
 

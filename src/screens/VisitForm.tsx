@@ -7,9 +7,10 @@ import AppHeader from '../components/AppHeader'
 import VitalField from '../components/VitalField'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
-import { SYMPTOMS, patients } from '../data/patients'
+import { SYMPTOMS } from '../data/patients'
+import { useSession } from '../session'
 import {
-  FOLLOW_UP_DAYS, emptyVitals, suggestUrgent,
+  FOLLOW_UP_DAYS, assess, emptyVitals, suggestUrgent,
   type Action, type VitalKey, type VitalValues,
 } from '../lib/vitals'
 import { TODAY, fullDate } from '../lib/date'
@@ -24,6 +25,7 @@ export default function VisitForm() {
   const { t, lang } = useT()
   const navigate = useNavigate()
   const { state } = useLocation() as { state: EditState }
+  const { patients, saveVisit } = useSession()
 
   // When editing, seed every field from the stored visit.
   const editing = useMemo(() => {
@@ -31,6 +33,7 @@ export default function VisitForm() {
     const p = patients.find((x) => x.id === state.patientId)
     const v = p?.visits[state.visitIndex ?? 0]
     return p && v ? { patient: p, visit: v } : null
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
   const [step, setStep] = useState(0)
@@ -51,7 +54,8 @@ export default function VisitForm() {
     editing ? (editing.visit.urgent ? 'urgent' : editing.visit.followUpDays ? 'followup' : 'none') : null,
   )
   const [followDays, setFollowDays] = useState<number>(editing?.visit.followUpDays ?? 7)
-  const [saved, setSaved] = useState(false)
+  const [savedId, setSavedId] = useState<string | null>(null)
+  const saved = savedId !== null
 
   const suggestion = useMemo(() => suggestUrgent(vitals, symptoms), [vitals, symptoms])
   const action: Action = override ?? suggestion.action
@@ -61,6 +65,19 @@ export default function VisitForm() {
   reviewDate.setDate(TODAY.getDate() + followDays)
 
   const setVital = (k: VitalKey) => (v: string) => setVitals((s) => ({ ...s, [k]: v }))
+
+  // A new visit for someone already on the list: fill in what we know about them,
+  // so the form's defaults (e.g. gender) never overwrite their record.
+  const onName = (v: string) => {
+    setName(v)
+    if (editing) return
+    const needle = v.trim().toLowerCase()
+    const known = patients.find((p) => Object.values(p.name).some((n) => n.toLowerCase() === needle))
+    if (!known) return
+    setAge(String(known.age))
+    setGender(known.gender)
+    setAddress(pick(known.address, lang))
+  }
 
   const toggleSymptom = (id: string) => {
     setNoSymptoms(false)
@@ -74,7 +91,8 @@ export default function VisitForm() {
     name: name.trim() === '',
     age: age.trim() === '',
     address: address.trim() === '',
-    vitals: VITAL_KEYS.filter((k) => vitals[k].trim() === ''),
+    // A lone "." is not a reading.
+    vitals: VITAL_KEYS.filter((k) => assess(k, vitals[k]) === null),
     symptoms: symptoms.length === 0 && !noSymptoms,
     notes: notes.trim() === '',
   }
@@ -92,7 +110,27 @@ export default function VisitForm() {
     }
     setTouched(false)
     if (step < 3) setStep(step + 1)
-    else setSaved(true)
+    else
+      setSavedId(
+        saveVisit(
+          {
+            patientId: editing?.patient.id,
+            visitIndex: state?.visitIndex,
+            name,
+            age: Number(age),
+            gender,
+            address,
+            visit: {
+              vitals,
+              symptoms: noSymptoms ? [] : symptoms,
+              notes: notes.trim(),
+              urgent: action === 'urgent',
+              ...(action === 'followup' ? { followUpDays: followDays } : {}),
+            },
+          },
+          lang,
+        ),
+      )
   }
 
   const err = (bad: boolean) => (touched && bad ? ' fld--err' : '')
@@ -105,7 +143,7 @@ export default function VisitForm() {
           <div className="done fade-in">
             <span className="done__tick"><Check size={32} strokeWidth={3} /></span>
             <h2 className="done__title">
-              {editing ? t.visits.updateVisit : t.visits.saveVisit}
+              {editing ? t.visits.visitUpdated : t.visits.visitSaved}
             </h2>
             <p className="done__sub">{name}</p>
             <p className="faint" style={{ fontSize: 12.5, margin: 0 }}>{address}</p>
@@ -120,7 +158,11 @@ export default function VisitForm() {
               </span>
             )}
           </div>
-          <button className="btn btn--primary btn--block" onClick={() => navigate('/visits')}>
+          <button className="btn btn--primary btn--block" onClick={() =>
+              // An edit returns to the record it came from; a new visit opens its record.
+              editing ? navigate(-1) : navigate(`/visits/${savedId}`, { replace: true })
+            }
+          >
             {t.common.done}
           </button>
         </div>
@@ -153,7 +195,7 @@ export default function VisitForm() {
               <span className="fld__label">
                 {t.visits.name} <Req show={touched && missing.name} label={t.common.required} />
               </span>
-              <input className="fld__input" value={name} onChange={(e) => setName(e.target.value)} />
+              <input className="fld__input" value={name} onChange={(e) => onName(e.target.value)} />
             </label>
 
             <label className={`fld${err(missing.age)}`}>
@@ -200,18 +242,18 @@ export default function VisitForm() {
           <div className="fade-in form">
             <span className="fld__label">{t.visits.bp}</span>
             <div className="form__row">
-              <VitalField vkey="systolic" label={t.visits.systolic} unit="mmHg" value={vitals.systolic} onChange={setVital('systolic')} placeholder="120" missing={touched && vitals.systolic === ''} />
-              <VitalField vkey="diastolic" label={t.visits.diastolic} unit="mmHg" value={vitals.diastolic} onChange={setVital('diastolic')} placeholder="80" missing={touched && vitals.diastolic === ''} />
+              <VitalField vkey="systolic" label={t.visits.systolic} unit="mmHg" value={vitals.systolic} onChange={setVital('systolic')} placeholder="120" missing={touched && missing.vitals.includes('systolic')} />
+              <VitalField vkey="diastolic" label={t.visits.diastolic} unit="mmHg" value={vitals.diastolic} onChange={setVital('diastolic')} placeholder="80" missing={touched && missing.vitals.includes('diastolic')} />
             </div>
             <div className="form__row">
-              <VitalField vkey="pulse" label={t.visits.pulse} unit="bpm" value={vitals.pulse} onChange={setVital('pulse')} placeholder="72" missing={touched && vitals.pulse === ''} />
-              <VitalField vkey="temp" label={t.visits.temp} unit="°F" value={vitals.temp} onChange={setVital('temp')} placeholder="98.6" missing={touched && vitals.temp === ''} />
+              <VitalField vkey="pulse" label={t.visits.pulse} unit="bpm" value={vitals.pulse} onChange={setVital('pulse')} placeholder="72" missing={touched && missing.vitals.includes('pulse')} />
+              <VitalField vkey="temp" label={t.visits.temp} unit="°F" value={vitals.temp} onChange={setVital('temp')} placeholder="98.6" missing={touched && missing.vitals.includes('temp')} />
             </div>
             <div className="form__row">
-              <VitalField vkey="spo2" label={t.visits.spo2} unit="%" value={vitals.spo2} onChange={setVital('spo2')} placeholder="98" missing={touched && vitals.spo2 === ''} />
-              <VitalField vkey="weight" label={t.visits.weight} unit="kg" value={vitals.weight} onChange={setVital('weight')} placeholder="60" missing={touched && vitals.weight === ''} />
+              <VitalField vkey="spo2" label={t.visits.spo2} unit="%" value={vitals.spo2} onChange={setVital('spo2')} placeholder="98" missing={touched && missing.vitals.includes('spo2')} />
+              <VitalField vkey="weight" label={t.visits.weight} unit="kg" value={vitals.weight} onChange={setVital('weight')} placeholder="60" missing={touched && missing.vitals.includes('weight')} />
             </div>
-            <VitalField vkey="sugar" label={t.visits.sugar} unit="mg/dL" value={vitals.sugar} onChange={setVital('sugar')} placeholder="110" missing={touched && vitals.sugar === ''} />
+            <VitalField vkey="sugar" label={t.visits.sugar} unit="mg/dL" value={vitals.sugar} onChange={setVital('sugar')} placeholder="110" missing={touched && missing.vitals.includes('sugar')} />
           </div>
         )}
 
@@ -342,7 +384,7 @@ export default function VisitForm() {
               )}
 
               {urgent && (
-                <button className="btn btn--danger btn--block" style={{ marginTop: 12 }}>
+                <button className="btn btn--danger btn--block" style={{ marginTop: 12 }} onClick={goNext}>
                   <Hospital size={18} /> {t.visits.referPhc}
                 </button>
               )}

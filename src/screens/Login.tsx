@@ -31,7 +31,13 @@ export default function Login() {
         <p className="auth__sub">{t.auth.loginSub}</p>
       </header>
 
-      <div className="scroll auth__body">
+      <form
+        className="scroll auth__body"
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (ashaId.trim() && password) submit()
+        }}
+      >
         <label className="fld">
           <span className="fld__label">{t.auth.ashaId}</span>
           <input
@@ -78,6 +84,7 @@ export default function Login() {
         <button
           className="btn btn--primary btn--block"
           style={{ marginTop: 6 }}
+          type="submit"
           disabled={!ashaId.trim() || !password}
           onClick={submit}
         >
@@ -93,6 +100,7 @@ export default function Login() {
           <button
             className="btn btn--ghost btn--block"
             style={{ minHeight: 42 }}
+            type="button"
             onClick={() => {
               setAshaId(DEMO.ashaId)
               setPassword(DEMO.password)
@@ -106,7 +114,7 @@ export default function Login() {
         <p className="auth__switch">
           {t.auth.noAccount} <Link to="/register">{t.auth.register}</Link>
         </p>
-      </div>
+      </form>
     </div>
   )
 }

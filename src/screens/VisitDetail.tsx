@@ -3,7 +3,8 @@ import { AlertTriangle, CalendarClock, Check, Pencil } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
-import { patients, symptomById } from '../data/patients'
+import { symptomById } from '../data/patients'
+import { useSession } from '../session'
 import { assess, levelLabel, type VitalKey } from '../lib/vitals'
 import { addDays, fromIso, fullDate } from '../lib/date'
 
@@ -16,6 +17,7 @@ const UNITS: Record<VitalKey, string> = {
 export default function VisitDetail() {
   const { id } = useParams()
   const { t, lang } = useT()
+  const { patients } = useSession()
   const patient = patients.find((p) => p.id === id)
 
   if (!patient) {

@@ -56,6 +56,7 @@ const ml: Dict = {
     priority: 'മുൻഗണന',
     allDone: 'ഇന്നത്തെ എല്ലാ ജോലികളും പൂർത്തിയായി',
     remaining: 'ജോലികൾ ഇന്ന് ബാക്കി',
+    remainingOne: 'ജോലി ഇന്ന് ബാക്കി',
     openAll: 'എല്ലാ ജോലികളും കാണുക',
   },
 
@@ -95,6 +96,7 @@ const ml: Dict = {
     myId: 'എന്റെ ഡിജിറ്റൽ ഐഡി',
     urgentTitle: 'അടിയന്തര തുടർപരിശോധന വേണം',
     urgentBody: 'രോഗികൾ റഫറലിനായി അടയാളപ്പെടുത്തി',
+    urgentBodyOne: 'രോഗി റഫറലിനായി അടയാളപ്പെടുത്തി',
   },
 
   calendar: {
@@ -116,6 +118,8 @@ const ml: Dict = {
     salaryPaid: 'നൽകി',
     salaryPending: 'കുടിശ്ശിക',
     salaryDelayed: 'വൈകി',
+    salaryUpcoming: 'സമയമായിട്ടില്ല',
+    upcomingSub: 'നിശ്ചിത തീയതിയിൽ പ്രതീക്ഷിക്കുന്നു',
     salaryDelayedBy: 'വൈകിയത്',
     salaryDays: 'ദിവസം',
   },
@@ -185,7 +189,7 @@ const ml: Dict = {
     myPoints: 'എന്റെ പോയിന്റ്',
     pointsBalance: 'പോയിന്റ് ബാക്കി',
     pts: 'പോയിന്റ്',
-    earnedSoFar: 'ഇതുവരെ ക്വിസിൽ നിന്ന് നേടിയത്',
+    earnedSoFar: 'പണ മൂല്യം',
     redeemCta: 'പോയിന്റ് പണമാക്കി മാറ്റുക',
   },
 
@@ -208,6 +212,7 @@ const ml: Dict = {
   },
 
   settings: {
+    comingSoon: 'പൂർണ്ണ ആപ്പിൽ ലഭ്യം',
     title: 'ക്രമീകരണം',
     language: 'ഭാഷ',
     languageSub: 'ആപ്പിന്റെ ഭാഷ',
@@ -287,6 +292,8 @@ const ml: Dict = {
     summary: 'സന്ദർശന സംഗ്രഹം',
     saveVisit: 'സന്ദർശനം സേവ് ചെയ്യുക',
     updateVisit: 'സന്ദർശനം പുതുക്കുക',
+    visitSaved: 'സന്ദർശനം സേവ് ചെയ്തു',
+    visitUpdated: 'സന്ദർശനം പുതുക്കി',
     normal: 'സാധാരണം', elevated: 'ഉയർന്നത്', high: 'വളരെ ഉയർന്നത്', low: 'കുറവ്',
     visitHistory: 'സന്ദർശന ചരിത്രം',
     noVitals: 'പരിശോധന രേഖപ്പെടുത്തിയിട്ടില്ല',

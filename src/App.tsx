@@ -1,5 +1,6 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth'
+import { SessionProvider } from './session'
 import { I18nProvider } from './i18n'
 import PhoneFrame from './components/PhoneFrame'
 import TabsLayout from './components/TabsLayout'
@@ -25,16 +26,21 @@ import Welcome from './screens/Welcome'
 import Login from './screens/Login'
 import Register from './screens/Register'
 
+// The offline build is opened straight from disk (file://), where only hash URLs work.
+const Router = import.meta.env.MODE === 'offline' ? HashRouter : BrowserRouter
+
 export default function App() {
   return (
     <I18nProvider>
       <AuthProvider>
-        <BrowserRouter>
+        <SessionProvider>
+        <Router>
           <PhoneFrame>
             <Shell />
             <Splash />
           </PhoneFrame>
-        </BrowserRouter>
+        </Router>
+        </SessionProvider>
       </AuthProvider>
     </I18nProvider>
   )

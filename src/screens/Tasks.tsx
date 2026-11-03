@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSession } from '../session'
 import {
   AlertTriangle, Check, ChevronDown, ClipboardList, Clock, MapPin, Syringe,
   Stethoscope, HeartPulse, FileText, Users, User,
@@ -20,9 +21,7 @@ const ICON: Record<TaskKind, React.ReactNode> = {
 
 export default function Tasks() {
   const { t, lang } = useT()
-  const [done, setDone] = useState<Record<string, boolean>>(
-    Object.fromEntries(seed.map((x) => [x.id, x.done])),
-  )
+  const { taskDone: done, toggleTask } = useSession()
   const [open, setOpen] = useState<string | null>(null)
 
   const list = [...seed].sort((a, b) => a.time.localeCompare(b.time))
@@ -60,7 +59,7 @@ export default function Tasks() {
               <div className="tk__row">
                 <button
                   className={`tk__check ${isDone ? 'tk__check--on' : ''}`}
-                  onClick={() => setDone((d) => ({ ...d, [x.id]: !d[x.id] }))}
+                  onClick={() => toggleTask(x.id)}
                   role="checkbox"
                   aria-checked={isDone}
                   aria-label={pick(x.title, lang)}

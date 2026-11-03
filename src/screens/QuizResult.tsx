@@ -1,4 +1,5 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import { useSession } from '../session'
 import { Flame, Home, Trophy } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
@@ -6,8 +7,9 @@ import { POINTS_PER_CORRECT, STREAK, todaysQuestions } from '../data/quiz'
 
 export default function QuizResult() {
   const { t } = useT()
-  const { state } = useLocation() as { state: { score?: number } | null }
-  const score = state?.score ?? 0
+  const { quizScore } = useSession()
+  if (quizScore === null) return <Navigate to="/quiz" replace />
+  const score = quizScore
   const total = todaysQuestions.length
   const pct = (score / total) * 100
 

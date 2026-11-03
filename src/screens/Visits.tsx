@@ -4,11 +4,13 @@ import { AlertTriangle, ChevronRight, Plus, Search } from 'lucide-react'
 import AppHeader from '../components/AppHeader'
 import { useT } from '../i18n'
 import { pick } from '../data/types'
-import { patients, isUrgent, lastVisit } from '../data/patients'
+import { isUrgent, lastVisit } from '../data/patients'
+import { useSession } from '../session'
 import { dayLabel, fromIso } from '../lib/date'
 
 export default function Visits() {
   const { t, lang } = useT()
+  const { patients } = useSession()
   const [q, setQ] = useState('')
 
   const list = useMemo(() => {
@@ -26,7 +28,7 @@ export default function Visits() {
       if (isUrgent(a) !== isUrgent(b)) return isUrgent(a) ? -1 : 1
       return (lastVisit(b)?.date ?? '').localeCompare(lastVisit(a)?.date ?? '')
     })
-  }, [q, lang])
+  }, [q, lang, patients])
 
   const genderLabel = { male: t.visits.male, female: t.visits.female, other: t.visits.other }
 

@@ -8,13 +8,14 @@ import { useT } from '../i18n'
 import { pick } from '../data/types'
 import { profile } from '../data/profile'
 import { totalBy } from '../data/salary'
-import { patients, isUrgent } from '../data/patients'
-import { POINTS_BALANCE } from '../data/rewards'
+import { isUrgent } from '../data/patients'
 import { tasks } from '../data/tasks'
+import { useSession } from '../session'
 import { TODAY, fromIso, fullDate, rupees } from '../lib/date'
 
 export default function Home() {
   const { t, lang } = useT()
+  const { patients, taskDone, points } = useSession()
 
   // Real clock, not the pinned demo date: the greeting should match the room.
   const hour = new Date().getHours()
@@ -31,14 +32,17 @@ export default function Home() {
   const urgent = patients.filter(isUrgent)
 
   const total = tasks.length
-  const doneCount = tasks.filter((x) => x.done).length
+  const doneCount = tasks.filter((x) => taskDone[x.id]).length
   const taskStats = {
     total,
     done: doneCount,
     left: total - doneCount,
     pct: Math.round((doneCount / total) * 100),
   }
-  const nextTasks = tasks.filter((x) => !x.done).slice(0, 2)
+  const nextTasks = [...tasks]
+    .sort((a, b) => a.time.localeCompare(b.time))
+    .filter((x) => !taskDone[x.id])
+    .slice(0, 2)
 
   return (
     <div className="screen">
@@ -53,7 +57,7 @@ export default function Home() {
         <div className="home__stats">
           <Stat icon={<Wallet size={18} />} label={t.home.pendingTitle} value={rupees(owed)} to="/calendar" />
           <Stat icon={<Stethoscope size={18} />} label={t.home.visitsTitle} value={String(visitsThisWeek)} to="/visits" />
-          <Stat icon={<BrainCircuit size={18} />} label={t.home.streakTitle} value={POINTS_BALANCE.toLocaleString('en-IN')} to="/quiz" />
+          <Stat icon={<BrainCircuit size={18} />} label={t.home.streakTitle} value={points.toLocaleString('en-IN')} to="/quiz" />
         </div>
 
         {urgent.length > 0 && (
@@ -62,7 +66,7 @@ export default function Home() {
             <span className="col" style={{ flex: 1, minWidth: 0 }}>
               <span className="home__urgentTitle">{t.home.urgentTitle}</span>
               <span className="home__urgentBody">
-                {urgent.length} {t.home.urgentBody}
+                {urgent.length} {urgent.length === 1 ? t.home.urgentBodyOne : t.home.urgentBody}
               </span>
             </span>
             <ChevronRight size={20} />
@@ -76,7 +80,7 @@ export default function Home() {
             <span className="tkCard__icon"><ListChecks size={19} /></span>
             <span className="col" style={{ flex: 1, minWidth: 0 }}>
               <span className="tkCard__count">
-                {taskStats.left} {t.tasks.remaining}
+                {taskStats.left} {taskStats.left === 1 ? t.tasks.remainingOne : t.tasks.remaining}
               </span>
               <span className="tkCard__sub">
                 {taskStats.done} / {taskStats.total} {t.tasks.doneWord}

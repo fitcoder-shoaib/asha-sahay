@@ -1,3 +1,5 @@
+import logoMark from '../assets/logo-mark.png'
+
 type Props = {
   size?: number
   /** 'badge' sits the emblem on a white rounded tile; 'plain' draws the emblem alone. */
@@ -9,7 +11,7 @@ type Props = {
 export default function Logo({ size = 48, variant = 'badge', className }: Props) {
   const img = (
     <img
-      src="/logo-mark.png"
+      src={logoMark}
       alt="ASHA Sahay"
       width={variant === 'badge' ? Math.round(size * 0.84) : size}
       height={variant === 'badge' ? Math.round(size * 0.84) : size}
