@@ -153,7 +153,13 @@ This was a **team project for a Design Engineering course**.
 needs, choosing and scoping the five features, the information architecture and user flows, the
 interaction logic (for example the hold-to-trigger SOS, the urgent-checkup suggestion, required
 fields in the visit form, and salary status colours), the visual and UI design, the branding and
-the multilingual approach. The original design brief is kept in [`docs/design-brief.txt`](docs/design-brief.txt).
+the multilingual approach.
+
+Our design process is documented in:
+
+- [**Project report**](docs/ASHA-Sahay-report.docx): the Empathize and Define stages of design thinking, including user needs, the empathy map and the problem statement
+- [**Presentation**](docs/ASHA-Sahay-presentation.pptx): the full process from Empathize to Test, covering the How-Why ladder, ideation, feature list, architecture and UI design
+- [**Design brief**](docs/design-brief.txt): the original feature brief the prototype was built from
 
 **AI was used for the implementation.** The code in this repository was written with AI
 assistance to turn our designs into a working prototype. We directed every change, reviewed the
