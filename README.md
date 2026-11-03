@@ -162,14 +162,6 @@ results, and iterated until the prototype matched our design.
 We're sharing this openly because we think it's important to be transparent about how AI tools are
 used in student work.
 
-## Team
-
-| Name | GitHub |
-|---|---|
-| Shoaib Adil | [@fitcoder-shoaib](https://github.com/fitcoder-shoaib) |
-| _Add teammate_ | |
-| _Add teammate_ | |
-
 ---
 
-<div align="center"><sub>Made for ASHA workers, by students of Design Engineering.</sub></div>
+<div align="center"><sub>A team project. Made for ASHA workers, by students of Design Engineering.</sub></div>
